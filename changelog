@@ -1,3 +1,9 @@
+foreman (1.0.1-1) experimental; urgency=low
+
+  * 1.0.1 Released
+
+ -- Greg Sutcliffe <greg.sutcliffe@gmail.com>  Thu, 09 Aug 2012 21:39:00 +0100
+
 foreman (1.0-12) experimental; urgency=low
 
   * Revert to old packaging style due to horrible conflicts in Ubuntu
