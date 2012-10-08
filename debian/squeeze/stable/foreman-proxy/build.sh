@@ -18,11 +18,12 @@ MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 PBUILDER="$1"
 BUILD_DIR="$2"
 TARGET="${BUILD_DIR}/${PACKAGE_NAME}"
+DEB_STORE="/tmp/debs"
 
 REPO='git://github.com/theforeman/smart-proxy.git'
 BRANCH='9ea6076283d744ba55163ad45e3bacd96a1add72'
 
-# TODO: For repro
+# TODO: For reprepro
 # REPO_DIR='/home/greg/build-area/foreman-repo'
 # DEB_REPO='stable'
 
@@ -51,5 +52,8 @@ rm -rf $(/usr/bin/find "${TARGET}" -name '.git*')
 # Execute build using the pbuilder image in $1
 pdebuild-$PBUILDER
 
-# copy packages
-# Cleanup
+# Copy packages
+rm -rf   "${DEB_STORE}/$PBUILDER/stable/"
+mkdir -p "${DEB_STORE}/$PBUILDER/stable/"
+cp ../*changes "${DEB_STORE}/$PBUILDER/stable/"
+cp ../*deb     "${DEB_STORE}/$PBUILDER/stable/"
