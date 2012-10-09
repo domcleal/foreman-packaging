@@ -15,17 +15,18 @@ PACKAGE_NAME='foreman-proxy'
 VERSION='1.0'
 MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 
+# Name of the pbuilder env to use
 PBUILDER="$1"
-BUILD_DIR="$2"
+
+# We use readlink to get an absolute path to the Jenkins
+# checkout, but readlink expects the path to exist
+mkdir -p "../$1"
+BUILD_DIR=`readlink -f ../$1`
 TARGET="${BUILD_DIR}/${PACKAGE_NAME}"
-DEB_STORE="/tmp/debs"
+DEB_STORE='/tmp/debs'
 
 REPO='git://github.com/theforeman/smart-proxy.git'
 BRANCH='9ea6076283d744ba55163ad45e3bacd96a1add72'
-
-# TODO: For reprepro
-# REPO_DIR='/home/greg/build-area/foreman-repo'
-# DEB_REPO='stable'
 
 DATE=$(date -R)
 UNIXTIME=$(date +%s)
@@ -33,7 +34,7 @@ RELEASE="${VERSION}"
 GIT='/usr/bin/git'
 
 # Copy in packaging to the build dir
-mkdir "${BUILD_DIR}/debian"
+mkdir -p  "${BUILD_DIR}/debian"
 cp -r ./* "${BUILD_DIR}/debian/"
 
 # Clone source code
@@ -43,6 +44,7 @@ cd "${TARGET}"
 $GIT checkout "${BRANCH}"
 $GIT submodule init
 $GIT submodule update
+# Move packaging into source clone
 mv "${BUILD_DIR}/debian" "${TARGET}/"
 
 # Cleanup source
@@ -50,10 +52,5 @@ LAST_COMMIT=$($GIT rev-list HEAD|/usr/bin/head -n 1)
 rm -rf $(/usr/bin/find "${TARGET}" -name '.git*')
 
 # Execute build using the pbuilder image in $1
-pdebuild-$PBUILDER
-
-# Copy packages
-rm -rf   "${DEB_STORE}/$PBUILDER/stable/"
-mkdir -p "${DEB_STORE}/$PBUILDER/stable/"
-cp ../*changes "${DEB_STORE}/$PBUILDER/stable/"
-cp ../*deb     "${DEB_STORE}/$PBUILDER/stable/"
+sudo pdebuild-$PBUILDER
+sudo chown -R jenkins:jenkins "${BUILD_DIR}"
