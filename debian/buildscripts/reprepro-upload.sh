@@ -12,4 +12,4 @@ cd $3
 export GNUPGHOME=/root/test-reprepro/.gnupg
 dpkg-sig -k E775FF07 --sign builder *changes
 
-reprepro -b /root/test-reprepro -C $COMPONENT include $DISTRO *changes
+reprepro -b /root/test-reprepro -C $COMPONENT includedeb $DISTRO *deb
