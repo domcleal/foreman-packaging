@@ -15,8 +15,13 @@ PACKAGE_NAME='foreman-proxy'
 VERSION='1.1'
 MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 
+# Name of the pbuilder env to use
 PBUILDER="$1"
-BUILD_DIR="../$1/build"
+
+# We use readlink to get an absolute path to the Jenkins
+# checkout, but readlink expects the path to exist
+mkdir -p "../$1"
+BUILD_DIR=`readlink -f ../$1`
 TARGET="${BUILD_DIR}/${PACKAGE_NAME}"
 DEB_STORE='/tmp/debs'
 
@@ -39,6 +44,7 @@ cd "${TARGET}"
 $GIT checkout "${BRANCH}"
 $GIT submodule init
 $GIT submodule update
+# Move packaging into source clone
 mv "${BUILD_DIR}/debian" "${TARGET}/"
 
 # Cleanup source
