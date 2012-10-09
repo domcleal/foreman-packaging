@@ -1,7 +1,7 @@
 Source: foreman-proxy
 Section: net
 Priority: extra
-Maintainer: Jochen Schalanda <jochen@schalanda.name>
+Maintainer: Greg Sutcliffe <gsutclif@redhat.com>
 Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.9.1
 Homepage: http://theforeman.org/projects/smart-proxy
