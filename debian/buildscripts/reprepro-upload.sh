@@ -7,8 +7,9 @@ COMPONENT="$1"
 DISTRO="$2"
 DEB_PATH="$3"
 
-export GNUPGHOME=/root/test-reprepro/.gnupg
 cd $3
+
+export GNUPGHOME=/root/test-reprepro/.gnupg
 dpkg-sig -k E775FF07 --sign builder *changes
 
-reprepro -b /root/test-reprepro -C $COMPONENT includedeb $DISTRO *deb
+reprepro -b /root/test-reprepro -C $COMPONENT include $DISTRO *changes

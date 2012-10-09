@@ -12,7 +12,7 @@
 set -e
 
 PACKAGE_NAME='foreman-proxy'
-VERSION='1.1'
+VERSION='9999'
 MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 
 # Name of the pbuilder env to use
@@ -30,7 +30,7 @@ BRANCH='develop'
 
 DATE=$(date -R)
 UNIXTIME=$(date +%s)
-RELEASE="${VERSION}"
+RELEASE="${VERSION}-~nightlybuild${UNIXTIME}"
 GIT='/usr/bin/git'
 
 # Copy in packaging to the build dir
