@@ -1,8 +1,8 @@
-foreman-proxy (1.0+precise1) unstable; urgency=low
+foreman-proxy (1.0+ubuntu1) precise; urgency=low
 
   * 1.0 released
 
- -- Greg Sutcliffe <greg.sutcliffe@gmail.com>  Thu, 26 Jul 2012 11:03:00 +0100
+ -- Greg Sutcliffe <greg.sutcliffe@gmail.com>  Tue, 09 Oct 2012 15:53:30 +0100
 
 foreman-proxy (1.0-rc2-1) unstable; urgency=low
 
