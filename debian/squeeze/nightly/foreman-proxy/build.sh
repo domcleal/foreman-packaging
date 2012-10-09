@@ -66,10 +66,5 @@ cat debian/changelog.tmp >> debian/changelog
 rm -f debian/changelog.tmp
 
 # Execute build using the pbuilder image in $1
-pdebuild-$PBUILDER
-
-# Copy packages
-rm -rf   "${DEB_STORE}/$PBUILDER/nightly/"
-mkdir -p "${DEB_STORE}/$PBUILDER/nightly/"
-cp ../*changes "${DEB_STORE}/$PBUILDER/nightly/"
-cp ../*deb     "${DEB_STORE}/$PBUILDER/nightly/"
+sudo pdebuild-$PBUILDER
+sudo chown -R jenkins:jenkins "${BUILD_DIR}"
