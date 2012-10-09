@@ -16,16 +16,12 @@ VERSION='1.1'
 MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 
 PBUILDER="$1"
-BUILD_DIR="$2"
+BUILD_DIR="../$1/build"
 TARGET="${BUILD_DIR}/${PACKAGE_NAME}"
-DEB_STORE="/tmp/debs"
+DEB_STORE='/tmp/debs'
 
 REPO='git://github.com/theforeman/smart-proxy.git'
 BRANCH='develop'
-
-# TODO: For reprepro
-# REPO_DIR='/home/greg/build-area/foreman-repo'
-# DEB_REPO='stable'
 
 DATE=$(date -R)
 UNIXTIME=$(date +%s)
@@ -33,7 +29,7 @@ RELEASE="${VERSION}"
 GIT='/usr/bin/git'
 
 # Copy in packaging to the build dir
-mkdir "${BUILD_DIR}/debian"
+mkdir -p  "${BUILD_DIR}/debian"
 cp -r ./* "${BUILD_DIR}/debian/"
 
 # Clone source code
