@@ -42,7 +42,6 @@ $GIT submodule update
 mv "${BUILD_DIR}/debian" "${TARGET}/"
 
 # Cleanup source
-LAST_COMMIT=$($GIT rev-list HEAD|/usr/bin/head -n 1)
 rm -rf $(/usr/bin/find "${TARGET}" -name '.git*')
 
 # Execute build using the pbuilder image in $1

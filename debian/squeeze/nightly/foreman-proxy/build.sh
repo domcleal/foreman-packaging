@@ -12,8 +12,6 @@
 set -e
 
 PACKAGE_NAME='foreman-proxy'
-VERSION='9999'
-MAINTAINER='Greg Sutcliffe <greg.sutcliffe@gmail.com>'
 
 # Name of the pbuilder env to use
 PBUILDER="$1"
@@ -23,14 +21,10 @@ PBUILDER="$1"
 mkdir -p "../$1"
 BUILD_DIR=`readlink -f ../$1`
 TARGET="${BUILD_DIR}/${PACKAGE_NAME}"
-DEB_STORE='/tmp/debs'
 
 REPO='git://github.com/theforeman/smart-proxy.git'
 BRANCH='develop'
 
-DATE=$(date -R)
-UNIXTIME=$(date +%s)
-RELEASE="${VERSION}-~nightlybuild${UNIXTIME}"
 GIT='/usr/bin/git'
 
 # Copy in packaging to the build dir
@@ -52,6 +46,11 @@ LAST_COMMIT=$($GIT rev-list HEAD|/usr/bin/head -n 1)
 rm -rf $(/usr/bin/find "${TARGET}" -name '.git*')
 
 # Add 'nightly' to changelog
+
+DATE=$(date -R)
+UNIXTIME=$(date +%s)
+RELEASE="9999-~nightlybuild${UNIXTIME}"
+
 mv debian/changelog debian/changelog.tmp
 
 echo "$PACKAGE_NAME ($RELEASE) UNRELEASED; urgency=low
