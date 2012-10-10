@@ -49,7 +49,7 @@ rm -rf $(/usr/bin/find "${TARGET}" -name '.git*')
 
 DATE=$(date -R)
 UNIXTIME=$(date +%s)
-RELEASE="9999+debian1~nightlybuild${UNIXTIME}"
+RELEASE="9999+ubuntu1~nightlybuild${UNIXTIME}"
 MAINTAINER="Greg Sutcliffe <gsutclif@redhat.com>"
 
 mv debian/changelog debian/changelog.tmp
