@@ -32,14 +32,20 @@ chmod 755 '/var/lib/foreman/public/javascripts'
 chmod 755 '/var/lib/foreman/public/stylesheets'
 chmod 755 '/var/cache/foreman'
 
-# Install gems - run twice as the postinst makes no distinction between install or upgrade
+# Gem setup. We can detect if this is an upgrade by the presence of a Gemfile.lock
 cd /usr/share/foreman
 if [ ! -z "${DEBUG}" ]; then
-  bundle install --path ./vendor/
-  bundle update
+  if [ -f Gemfile.lock ]; then
+    bundle update
+  else
+    bundle install --path ./vendor/
+  fi
 else
-  bundle install --path ./vendor/ 2>&1 >/dev/null
-  bundle update 2>&1 >/dev/null
+  if [ -f Gemfile.lock ]; then
+    bundle update 2>&1 >/dev/null
+  else
+    bundle install --path ./vendor/ 2>&1 >/dev/null
+  fi
 fi
 
 # Run a db:migrate if the user has created a dbfile
