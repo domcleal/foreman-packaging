@@ -1,5 +1,5 @@
 %define rbname rkerberos
-%define version 0.1.0
+%define version 0.1.1
 %define release 1
 
 Summary: A Ruby interface for the the Kerberos library
@@ -9,9 +9,8 @@ Version: %{version}
 Release: %{release}%{dist}
 Group: Development/Ruby
 License: Artistic 2.0
-URL: http://github.com/djberg96/rkerberos
+URL: http://github.com/domcleal/rkerberos
 Source0: http://rubygems.org/downloads/%{rbname}-%{version}.gem
-Patch0: rubygem-rkerberos-0001-Add-credential-cache.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
 Requires: ruby 
@@ -41,12 +40,6 @@ mkdir -p ./%{gemdir}
 export CONFIGURE_ARGS="--with-cflags='%{optflags}' --with-%{rbname}-include=/usr/include/et"
 gem install --local --install-dir ./%{gemdir} -V --force %{SOURCE0}
 
-# Apply patch and rebuild
-patch -p1 -d ./%{gemdir}/gems/%{rbname}-%{version} -i %{PATCH0}
-pushd ./%{gemdir}/gems/%{rbname}-%{version}
-rake clean compile
-popd
-
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{gemdir}
@@ -62,7 +55,7 @@ sed -i '/rake-compiler/ s/runtime/development/' %{buildroot}/%{gemdir}/specifica
 %files
 %defattr(-, root, root)
 %{gemdir}/gems/%{rbname}-%{version}/Rakefile
-%doc %{gemdir}/gems/%{rbname}-%{version}/README
+%doc %{gemdir}/gems/%{rbname}-%{version}/README.md
 %doc %{gemdir}/gems/%{rbname}-%{version}/CHANGES
 %doc %{gemdir}/gems/%{rbname}-%{version}/MANIFEST
 %{gemdir}/gems/%{rbname}-%{version}/test
@@ -73,6 +66,10 @@ sed -i '/rake-compiler/ s/runtime/development/' %{buildroot}/%{gemdir}/specifica
 %{gemdir}/specifications/%{rbname}-%{version}.gemspec
 
 %changelog
+* Wed May 08 2013 Dominic Cleal <dcleal@redhat.com> 0.1.1-1
+- Update to 0.1.1 release
+- Remove patch 103cea7d
+
 * Wed May 08 2013 Dominic Cleal <dcleal@redhat.com> 0.1.0-1
 - Initial 0.1.0 release
 - Add patch 103cea7d (Add credential cache argument to get_init_creds_keytab)
