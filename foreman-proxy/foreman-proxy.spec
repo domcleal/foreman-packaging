@@ -156,18 +156,31 @@ getent group foreman-proxy >/dev/null || \
   groupadd -r foreman-proxy
 getent passwd foreman-proxy >/dev/null || \
   useradd -r -g foreman-proxy -d %{homedir} -s /sbin/nologin -c "Foreman Proxy deamon user" foreman-proxy
+
+# Keep monolithic config in case it's replaced with the new default
+if [ $1 == 2 ]; then
+  test -e %{_localstatedir}/lib/rpm-state/%{name} || mkdir %{_localstatedir}/lib/rpm-state/%{name}
+  cp %{_sysconfdir}/%{name}/settings.yml %{_localstatedir}/lib/rpm-state/%{name}/settings.yml.orig
+fi
+
 exit 0
 
 %post
 # Migrate legacy monolithic proxy config
-cd %{_localstatedir}/lib/rpm-state/%{name}
-%{homedir}/extra/migrate_settings.rb %{_sysconfdir}/%{name}/settings.yml
-if [ $? = 0 ] ; then
-  mv settings.yml %{_sysconfdir}/%{name}
-  sed -i '/^---/ a #replace default location of "settings.d"\n:settings_directory: %{_sysconfdir}/%{name}/settings.d\n' \
-    %{_sysconfdir}/%{name}/settings.yml
-  ls *.yml >/dev/null 2>&1 && mv *.yml %{_sysconfdir}/%{name}/settings.d/
+if [ $1 == 2 ]; then
+  pushd %{_localstatedir}/lib/rpm-state/%{name} >/dev/null
+  if %{homedir}/extra/migrate_settings.rb settings.yml.orig; then
+    mv settings.yml %{_sysconfdir}/%{name}
+    sed -i '/^---/ a #replace default location of "settings.d"\n:settings_directory: %{_sysconfdir}/%{name}/settings.d\n' \
+      %{_sysconfdir}/%{name}/settings.yml
+    rm -f settings.yml.orig
+    ls *.yml >/dev/null 2>&1 && mv *.yml %{_sysconfdir}/%{name}/settings.d/
+  else
+    rm -f settings.yml.orig
+  fi
+  popd >/dev/null
 fi
+
 %if 0%{?rhel} == 6
   /sbin/chkconfig --add %{name}
   exit 0
