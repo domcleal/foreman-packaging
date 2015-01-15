@@ -72,6 +72,8 @@ rake install \
 %config(noreplace) %attr(600, root, root) %{_sysconfdir}/foreman/%{name}-answers.yaml
 %{_sbindir}/foreman-installer
 %{_datadir}/%{name}
+%exclude %{_datadir}/%{name}/modules/*/spec
+%exclude %{_datadir}/%{name}/modules/*/tests
 %{_mandir}/man8
 
 %changelog
