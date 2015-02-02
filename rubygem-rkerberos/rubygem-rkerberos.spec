@@ -31,17 +31,19 @@ License: Artistic 2.0
 URL: http://github.com/domcleal/rkerberos
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 
-Requires: %{?scl_prefix}ruby
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}ruby
+Requires: %{?scl_prefix_ruby}rubygems
 
-BuildRequires: %{?scl_prefix}ruby
-BuildRequires: %{?scl_prefix}rubygems
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}ruby-devel
+BuildRequires: %{?scl_prefix_ruby}ruby
+BuildRequires: %{?scl_prefix_ruby}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}ruby-devel
 BuildRequires: krb5-devel
 #BuildRequires: %{?scl_prefix}rubygem-rake-compiler
 
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 #test
 #BuildRequires: %{?scl_prefix}rubygem(test-unit)

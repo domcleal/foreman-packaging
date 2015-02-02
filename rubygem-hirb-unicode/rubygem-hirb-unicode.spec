@@ -12,13 +12,13 @@ Group: Development/Ruby
 License: MIT
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
+Requires: %{?scl_prefix_ruby}rubygems
 Requires: %{?scl_prefix}rubygem-hirb => 0.5
 Requires: %{?scl_prefix}rubygem-hirb < 1
 
@@ -26,6 +26,8 @@ Requires: %{?scl_prefix}rubygem-unicode-display_width => 0.1.1
 Requires: %{?scl_prefix}rubygem-unicode-display_width < 0.2
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(hirb-unicode) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %global gembuilddir %{buildroot}%{gem_dir}
 

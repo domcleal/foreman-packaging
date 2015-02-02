@@ -29,16 +29,16 @@ Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 Requires: foreman
 
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi)
+Requires: %{?scl_prefix_ruby}ruby(abi)
 %endif
 
 Requires: %{?scl_prefix}rubygem(dynflow) >= 0.7.2
 Requires: %{?scl_prefix}rubygem-sequel
-Requires: %{?scl_prefix}rubygem(sinatra)
+Requires: %{?scl_prefix_ruby}rubygem(sinatra)
 Requires: %{?scl_prefix}rubygem(daemons)
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}rubygems
 %if 0%{?rhel} == 6
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -49,16 +49,18 @@ Requires(post): systemd-units
 Requires(preun): systemd-units
 BuildRequires: systemd
 %endif
-BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 
 %if 0%{?fedora} > 18
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %endif
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 The goal of this plugin is to unify the way of showing task statuses across

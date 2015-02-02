@@ -25,13 +25,15 @@ Source0:    http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
+Obsoletes: ruby193-rubygem-%{gem_name}
+
 Requires: foreman >= 1.6.0
 Requires: %{?scl_prefix}rubygem(angular-rails-templates) >= 0.0.4
 Requires: %{?scl_prefix}rubygem(angular-rails-templates) < 0.1.0
 
 BuildRequires: foreman-assets >= 1.7.0
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildRequires: %{?scl_prefix}rubygem(less-rails) >= 2.5.0
 BuildRequires: %{?scl_prefix}rubygem(less-rails) < 2.6
 BuildRequires: %{?scl_prefix}rubygem(angular-rails-templates) >= 0.0.4
@@ -60,7 +62,7 @@ BuildArch: noarch
 Requires:  %{?scl_prefix}%{pkg_name} = %{version}-%{release}
 Requires:  %{?scl_prefix}rubygem(less-rails) >= 2.5.0
 Requires:  %{?scl_prefix}rubygem(less-rails) < 2.6
-Requires:  %{?scl_prefix}rubygem(uglifier)
+Requires:  %{?scl_prefix_ruby}rubygem(uglifier)
 
 %description devel
 This package contains assets compilation dependencies for %{scl_prefix}rubygem-%{gem_name}.

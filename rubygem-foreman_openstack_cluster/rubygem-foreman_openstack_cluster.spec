@@ -29,25 +29,27 @@ Requires:   foreman >= 1.3.0
 Requires:   %{?scl_prefix}rubygem(deface)
 
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
+Requires: %{?scl_prefix_ruby}ruby(abi) >= %{rubyabi}
 %endif
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}rubygems
 
 %if 0%{?fedora} > 18
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi) >= %{rubyabi}
+BuildRequires: %{?scl_prefix_ruby}ruby(abi) >= %{rubyabi}
 %endif
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 
 BuildArch: noarch
 
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 Provides: foreman-plugin-openstack_cluster
 Provides: foreman-plugin-openstack-cluster
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 A UI for entering parameters to create OpenStack-related host groups.

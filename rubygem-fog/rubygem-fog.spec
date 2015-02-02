@@ -20,7 +20,7 @@ Patch5: fog-no-voxel.patch
 Patch6: fog-no-vmfusion.patch
 Patch7: fog-no-terremark.patch
 
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}rubygems
 Requires: %{?scl_prefix}rubygem(fog-core) >= 1.25.0
 Requires: %{?scl_prefix}rubygem(fog-core) < 2.0.0
 Requires: %{?scl_prefix}rubygem(fog-json)
@@ -31,13 +31,13 @@ Requires: %{?scl_prefix}rubygem(ipaddress) < 1.0
 Requires: %{?scl_prefix}rubygem(nokogiri) >= 1.5.11
 Requires: %{?scl_prefix}rubygem(nokogiri) < 2.0
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
 
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildRequires: %{?scl_prefix}rubygem(fog-core) >= 1.25.0
 BuildRequires: %{?scl_prefix}rubygem(fog-core) < 2.0.0
 BuildRequires: %{?scl_prefix}rubygem(fog-json)
@@ -48,13 +48,15 @@ BuildRequires: %{?scl_prefix}rubygem(ipaddress) < 1.0
 BuildRequires: %{?scl_prefix}rubygem(nokogiri) >= 1.5.11
 BuildRequires: %{?scl_prefix}rubygem(nokogiri) < 2.0
 %if 0%{?fedora} > 18
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi) = 1.9.1
+BuildRequires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
 
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(fog) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 The Ruby cloud services library. Supports all major cloud providers including

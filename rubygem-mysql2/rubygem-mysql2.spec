@@ -16,17 +16,19 @@ URL: http://mysql-win.rubyforge.org
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildRoot: %{_tmppath}/%{pkg_name}-%{version}-root
 
-Requires: %{?scl_prefix}ruby >= 1.8.6
-Requires: %{?scl_prefix}rubygems >= 1.8.10
+Requires: %{?scl_prefix_ruby}ruby >= 1.8.6
+Requires: %{?scl_prefix_ruby}rubygems >= 1.8.10
 
-BuildRequires: %{?scl_prefix}ruby >= 1.8.6
-BuildRequires: %{?scl_prefix}rubygems >= 1.8.10
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}ruby-devel
+BuildRequires: %{?scl_prefix_ruby}ruby >= 1.8.6
+BuildRequires: %{?scl_prefix_ruby}rubygems >= 1.8.10
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}ruby-devel
 BuildRequires: mysql-devel
 
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %define gem_builddir %{buildroot}%{gem_dir}
 

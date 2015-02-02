@@ -22,18 +22,20 @@ Source0:   http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildArch: noarch
 Provides:  %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
-%if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && 0%{!?scl:1})
-Requires:  %{?scl_prefix}ruby(abi)
-BuildRequires: %{?scl_prefix}ruby(abi)
-%else
-Requires:  %{?scl_prefix}ruby(release)
-BuildRequires: %{?scl_prefix}ruby(release)
-%endif
-Requires:  %{?scl_prefix}rubygems
-Requires:  %{?scl_prefix}rubygem(rails) >= 3.0.7
+Obsoletes: ruby193-rubygem-%{gem_name}
 
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+%if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && 0%{!?scl:1})
+Requires:  %{?scl_prefix_ruby}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
+%else
+Requires:  %{?scl_prefix_ruby}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
+%endif
+Requires:  %{?scl_prefix_ruby}rubygems
+Requires:  %{?scl_prefix_ruby}rubygem(rails) >= 3.0.7
+
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 
 %description
 %{desc}

@@ -12,24 +12,26 @@ License: MIT
 URL: https://github.com/knu/ruby-unf
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 %if 0%{?fedora}
-Requires: %{?scl_prefix}ruby(release)
-Requires: %{?scl_prefix}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
 %else
-Requires: %{?scl_prefix}ruby(abi)
-Requires: %{?scl_prefix}rubygems
+Requires: %{?scl_prefix_ruby}ruby(abi)
+Requires: %{?scl_prefix_ruby}rubygems
 %endif
 
 Requires: %{?scl_prefix}rubygem(unf_ext)
 
-BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %if 0%{?fedora}
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %endif
-BuildRequires: %{?scl_prefix}ruby-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}ruby-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 Requires: %{?scl_prefix}rubygem(unf)
 

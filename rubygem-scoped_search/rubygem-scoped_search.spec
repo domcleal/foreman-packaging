@@ -12,20 +12,22 @@ Group: Development/Languages
 License: MIT
 URL: http://github.com/wvanbergen/scoped_search/wiki
 Source0: https://rubygems.org/downloads/%{gem_name}-%{version}.gem
-Requires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygem-activerecord >= 2.1.0
-BuildRequires: %{?scl_prefix}ruby 
-BuildRequires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-BuildRequires: %{?scl_prefix}rubygems-devel
+Requires: %{?scl_prefix_ruby}rubygems
+Requires: %{?scl_prefix_ruby}rubygem-activerecord >= 2.1.0
+BuildRequires: %{?scl_prefix_ruby}ruby 
+BuildRequires: %{?scl_prefix_ruby}rubygems
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(scoped_search) = %{version}
 
+Obsoletes: ruby193-rubygem-%{gem_name}
+
 # for check section
 %if 0%{?fedora} > 17
-BuildRequires: %{?scl_prefix}rubygem(rspec)
-BuildRequires: %{?scl_prefix}rubygem(activerecord)
-BuildRequires: %{?scl_prefix}rubygem(sqlite3)
+BuildRequires: %{?scl_prefix_ruby}rubygem(rspec)
+BuildRequires: %{?scl_prefix_ruby}rubygem(activerecord)
+BuildRequires: %{?scl_prefix_ruby}rubygem(sqlite3)
 %endif
 
 %description

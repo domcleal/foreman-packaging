@@ -12,12 +12,14 @@ License: MIT
 URL: http://sequel.jeremyevans.net
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildRoot: %{_tmppath}/%{pkg_name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-Requires: %{?scl_prefix}ruby(rubygems)
-BuildRequires: %{?scl_prefix}ruby-devel
-BuildRequires: %{?scl_prefix}rubygems-devel
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
+BuildRequires: %{?scl_prefix_ruby}ruby-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 The Database Toolkit for Ruby

@@ -19,23 +19,25 @@ Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Source1: pt_testcase.rb
 Requires: %{?scl_prefix}rubygem(sexp_processor) >= 4.1
 Requires: %{?scl_prefix}rubygem(sexp_processor) < 5.0
-Requires: %{?scl_prefix}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
-BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %if 0%{?fedora} > 18
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi) = 1.9.1
+BuildRequires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
-BuildRequires: %{?scl_prefix}rubygem(minitest)
+BuildRequires: %{?scl_prefix_ruby}rubygem(minitest)
 BuildRequires: %{?scl_prefix}rubygem(sexp_processor) >= 4.1
 BuildRequires: %{?scl_prefix}rubygem(sexp_processor) < 5.0
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 ruby_parser (RP) is a ruby parser written in pure ruby (utilizing

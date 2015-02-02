@@ -25,21 +25,23 @@ Source0:   http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildArch: noarch
 Provides:  %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
+Obsoletes: ruby193-rubygem-%{gem_name}
+
 Requires:  %{?scl_prefix}rubygem(ansi) >= 1.4.0
 Requires:  %{?scl_prefix}rubygem(ansi) <  1.5.0
 Requires:  %{?scl_prefix}rubygem(hashie) >= 1.1.0
 
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && 0%{!?scl:1})
-Requires:  %{?scl_prefix}ruby(abi)
-BuildRequires: %{?scl_prefix}ruby(abi)
+Requires:  %{?scl_prefix_ruby}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %else
-Requires:  %{?scl_prefix}ruby(release)
-BuildRequires: %{?scl_prefix}ruby(release)
+Requires:  %{?scl_prefix_ruby}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %endif
-Requires:  %{?scl_prefix}rubygems
+Requires:  %{?scl_prefix_ruby}rubygems
 
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 
 %description
 %{desc}

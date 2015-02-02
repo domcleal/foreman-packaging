@@ -16,14 +16,16 @@ Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 # TODO: Fix tests failing when redirected to a file, reported at
 # https://github.com/geemus/formatador/commit/a874311f52a34b9a1f1d0fe9fef20a095b79f941
 Patch0: formatador-fix-tests-when-redirecting-to-file.patch
-Requires: %{?scl_prefix}ruby(rubygems)
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
-BuildRequires: %{?scl_prefix}rubygems-devel
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %if 0%{bootstrap} < 1
 BuildRequires: %{?scl_prefix}rubygem(shindo)
 %endif
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 STDOUT text formatting

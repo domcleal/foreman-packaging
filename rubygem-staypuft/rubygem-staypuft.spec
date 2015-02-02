@@ -23,12 +23,14 @@ BuildArch: noarch
 Provides:  %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 Provides:  foreman-plugin-staypuft
 
+Obsoletes: ruby193-rubygem-%{gem_name}
+
 %if 0%{?fedora} > 18
-Requires:  %{?scl_prefix}ruby(release)
+Requires:  %{?scl_prefix_ruby}ruby(release)
 %else
-Requires:  %{?scl_prefix}ruby(abi)
+Requires:  %{?scl_prefix_ruby}ruby(abi)
 %endif
-Requires:  %{?scl_prefix}rubygems
+Requires:  %{?scl_prefix_ruby}rubygems
 
 Requires: %{?scl_prefix}rubygem(deface)
 Requires: %{?scl_prefix}rubygem(dynflow) >= 0.7.0
@@ -40,12 +42,12 @@ Requires: %{?scl_prefix}rubygem(ipaddress)
 Requires: %{?scl_prefix}rubygem(wicked)
 
 %if 0%{?fedora} > 18
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %else
-BuildRequires: %{?scl_prefix}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %endif
-BuildRequires: %{?scl_prefix}rubygems
-BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildRequires: foreman-assets >= 1.7.0
 BuildRequires: %{?scl_prefix}rubygem(deface)
 BuildRequires: %{?scl_prefix}rubygem(dynflow) >= 0.7.0

@@ -16,18 +16,20 @@ Source0:    	http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Patch0:		rubygem-hoe-2.12.2-rescue-missing-Manifest.patch
 # Rescue RDoc::Task when rubygem(rdoc) is not installed
 Patch1:		rubygem-hoe-2.12.3-rdoctask-rescue.patch
-Requires:   	%{?scl_prefix}ruby(abi) = 1.9.1
-Requires:   	%{?scl_prefix}rubygems >= 1.3.6
+Requires:   	%{?scl_prefix_ruby}ruby(abi) = 1.9.1
+Requires:   	%{?scl_prefix_ruby}rubygems >= 1.3.6
 Requires:   	%{?scl_prefix}rubygem(rubyforge) >= 2.0.4
-Requires:   	%{?scl_prefix}rubygem(rake)      >= 0.8.7
-#Requires:       %{?scl_prefix}rubygem(minitest)  >= 1.7.0
-BuildRequires:  %{?scl_prefix}rubygems-devel >= 1.3.6
+Requires:   	%{?scl_prefix_ruby}rubygem(rake)      >= 0.8.7
+#Requires:       %{?scl_prefix_ruby}rubygem(minitest)  >= 1.7.0
+BuildRequires:  %{?scl_prefix_ruby}rubygems-devel >= 1.3.6
 # %%check
-BuildRequires:	%{?scl_prefix}rubygem(minitest)
-BuildRequires:	%{?scl_prefix}rubygem(rake)
+BuildRequires:	%{?scl_prefix_ruby}rubygem(minitest)
+BuildRequires:	%{?scl_prefix_ruby}rubygem(rake)
 BuildRequires:	%{?scl_prefix}rubygem(rubyforge)
 BuildArch:  	noarch
 Provides:   	%{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 Hoe is a rake/rubygems helper for project Rakefiles. It helps generate

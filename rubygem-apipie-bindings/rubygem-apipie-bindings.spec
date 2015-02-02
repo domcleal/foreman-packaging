@@ -12,28 +12,30 @@ License: MIT
 URL: http://github.com/Apipie/apipie-bindings
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 
-Requires: %{?scl_prefix}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
 Requires: %{?scl_prefix}rubygem(rest-client) < 1.7.0
 Requires: %{?scl_prefix}rubygem(rest-client) >= 1.6.5
 Requires: %{?scl_prefix}rubygem(awesome_print)
 Requires: %{?scl_prefix}rubygem(oauth)
-Requires: %{?scl_prefix}rubygem(json) >= 1.2.1
-Requires: %{?scl_prefix}rubygem(mime-types) < 2.0.0
+Requires: %{?scl_prefix_ruby}rubygem(json) >= 1.2.1
+Requires: %{?scl_prefix_ruby}rubygem(mime-types) < 2.0.0
 
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
-Requires:      %{?scl_prefix}ruby(abi)
-BuildRequires: %{?scl_prefix}ruby(abi)
-BuildRequires: %{?scl_prefix}rubygems-devel
+Requires:      %{?scl_prefix_ruby}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %else
-Requires:      %{?scl_prefix}ruby(release)
-BuildRequires: %{?scl_prefix}ruby(release)
-BuildRequires: %{?scl_prefix}rubygems-devel
+Requires:      %{?scl_prefix_ruby}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %endif
 
-BuildRequires: %{?scl_prefix}ruby(rubygems)
+BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
 BuildArch: noarch
 
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 Bindings for API calls that are documented with Apipie. Bindings are generated on the fly.

@@ -19,48 +19,48 @@ Source0:  http://rubygems.org/gems/%{gem_name}-%{version}.gem
 # git checkout v2.8.2 && tar czf sprockets-tests-2.8.2.tgz test/
 Source1:  sprockets-%{version}-tests.tgz
 
-Requires: %{?scl_prefix}ruby(rubygems)
-Requires: %{?scl_prefix}rubygem(hike) => 1.2
-Requires: %{?scl_prefix}rubygem(hike) < 2
+Requires: %{?scl_prefix_ruby}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}rubygem(hike) => 1.2
+Requires: %{?scl_prefix_ruby}rubygem(hike) < 2
 Requires: %{?scl_prefix}rubygem(multi_json) => 1.0
 Requires: %{?scl_prefix}rubygem(multi_json) < 2
-Requires: %{?scl_prefix}rubygem(rack) => 1.0
-Requires: %{?scl_prefix}rubygem(rack) < 2
-Requires: %{?scl_prefix}rubygem(tilt) => 1.1
-Requires: %{?scl_prefix}rubygem(tilt) < 2
-Conflicts: %{?scl_prefix}rubygem(tilt) = 1.3.0
+Requires: %{?scl_prefix_ruby}rubygem(rack) => 1.0
+Requires: %{?scl_prefix_ruby}rubygem(rack) < 2
+Requires: %{?scl_prefix_ruby}rubygem(tilt) => 1.1
+Requires: %{?scl_prefix_ruby}rubygem(tilt) < 2
+Conflicts: %{?scl_prefix_ruby}rubygem(tilt) = 1.3.0
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
-Requires: %{?scl_prefix}ruby(abi)
+Requires: %{?scl_prefix_ruby}ruby(abi)
 %else
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %endif
 
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}ruby
-BuildRequires: %{?scl_prefix}rubygem(coffee-script)
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}ruby
+BuildRequires: %{?scl_prefix_ruby}rubygem(coffee-script)
 # these two gems aren't in Fedora yet and are only soft dependencies
 # BuildRequires: %{?scl_prefix}rubygem(eco)
 # BuildRequires: %{?scl_prefix}rubygem(ejs)
-BuildRequires: %{?scl_prefix}rubygem(execjs)
-BuildRequires: %{?scl_prefix}rubygem(hike) => 1.2
-BuildRequires: %{?scl_prefix}rubygem(hike) < 2
-BuildRequires: %{?scl_prefix}rubygem(minitest)
-BuildRequires: %{?scl_prefix}rubygem(uglifier)
+BuildRequires: %{?scl_prefix_ruby}rubygem(execjs)
+BuildRequires: %{?scl_prefix_ruby}rubygem(hike) => 1.2
+BuildRequires: %{?scl_prefix_ruby}rubygem(hike) < 2
+BuildRequires: %{?scl_prefix_ruby}rubygem(minitest)
+BuildRequires: %{?scl_prefix_ruby}rubygem(uglifier)
 BuildRequires: %{?scl_prefix}rubygem(multi_json)
-BuildRequires: %{?scl_prefix}rubygem(json)
-BuildRequires: %{?scl_prefix}rubygem(rack) => 1.0
-BuildRequires: %{?scl_prefix}rubygem(rack) < 2
-BuildRequires: %{?scl_prefix}rubygem(rack-test)
-BuildRequires: %{?scl_prefix}rubygem(rake)
+BuildRequires: %{?scl_prefix_ruby}rubygem(json)
+BuildRequires: %{?scl_prefix_ruby}rubygem(rack) => 1.0
+BuildRequires: %{?scl_prefix_ruby}rubygem(rack) < 2
+BuildRequires: %{?scl_prefix_ruby}rubygem(rack-test)
+BuildRequires: %{?scl_prefix_ruby}rubygem(rake)
 BuildRequires: %{?scl_prefix}rubygem(sass)
-BuildRequires: %{?scl_prefix}rubygem(therubyracer)
-BuildRequires: %{?scl_prefix}rubygem(tilt) => 1.1
-BuildRequires: %{?scl_prefix}rubygem(tilt) < 2
-BuildConflicts: %{?scl_prefix}rubygem(tilt) = 1.3.0
+BuildRequires: %{?scl_prefix_ruby}rubygem(therubyracer)
+BuildRequires: %{?scl_prefix_ruby}rubygem(tilt) => 1.1
+BuildRequires: %{?scl_prefix_ruby}rubygem(tilt) < 2
+BuildConflicts: %{?scl_prefix_ruby}rubygem(tilt) = 1.3.0
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
-BuildRequires: %{?scl_prefix}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %else
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %endif
 %if "%{?scl_v8}" != ""
 BuildRequires: %{?scl_v8}
@@ -69,6 +69,8 @@ BuildRequires: %{?scl_v8}-scldevel
 
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %description
 Sprockets is a Rack-based asset packaging system that concatenates and serves

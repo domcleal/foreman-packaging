@@ -12,25 +12,27 @@ Group: Development/Ruby
 License: MIT
 URL: http://github.com/fog/fog-core
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: %{?scl_prefix}rubygems
-Requires: %{?scl_prefix}rubygem-builder
+Requires: %{?scl_prefix_ruby}rubygems
+Requires: %{?scl_prefix_ruby}rubygem-builder
 Requires: %{?scl_prefix}rubygem-excon >= 0.38.0
 Requires: %{?scl_prefix}rubygem-excon < 1
 Requires: %{?scl_prefix}rubygem-formatador => 0.2.0
 Requires: %{?scl_prefix}rubygem-formatador < 0.3
-Requires: %{?scl_prefix}rubygem-mime-types
+Requires: %{?scl_prefix_ruby}rubygem-mime-types
 Requires: %{?scl_prefix}rubygem-net-scp => 1.1.0
 Requires: %{?scl_prefix}rubygem-net-scp < 2
 Requires: %{?scl_prefix}rubygem-net-ssh >= 2.1.3
 %if 0%{?fedora} > 18
-Requires: %{?scl_prefix}ruby(release)
+Requires: %{?scl_prefix_ruby}ruby(release)
 %else
-Requires: %{?scl_prefix}ruby(abi) = 1.9.1
+Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
 %endif
-BuildRequires: %{?scl_prefix}rubygems-devel
-BuildRequires: %{?scl_prefix}rubygems
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+
+Obsoletes: ruby193-rubygem-%{gem_name}
 
 %define gembuilddir %{buildroot}%{gem_dir}
 

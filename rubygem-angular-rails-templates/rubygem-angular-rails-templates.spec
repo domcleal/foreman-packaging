@@ -18,21 +18,23 @@ Source0:   http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 BuildArch: noarch
 Provides:  %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
-Requires:  %{?scl_prefix}ruby(rubygems)
-Requires:  %{?scl_prefix}rubygem(railties) >= 3.1
+Obsoletes: ruby193-rubygem-%{gem_name}
+
+Requires:  %{?scl_prefix_ruby}ruby(rubygems)
+Requires:  %{?scl_prefix_ruby}rubygem(railties) >= 3.1
 Requires:  %{?scl_prefix}rubygem(sprockets-rails)
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
-Requires:      %{?scl_prefix}ruby(abi)
+Requires:      %{?scl_prefix_ruby}ruby(abi)
 %else
-Requires:      %{?scl_prefix}ruby(release)
+Requires:      %{?scl_prefix_ruby}ruby(release)
 %endif
 
-BuildRequires: %{?scl_prefix}ruby(rubygems)
-BuildRequires: %{?scl_prefix}rubygems-devel
+BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
+BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 %if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
-BuildRequires: %{?scl_prefix}ruby(abi)
+BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %else
-BuildRequires: %{?scl_prefix}ruby(release)
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %endif
 
 %description
