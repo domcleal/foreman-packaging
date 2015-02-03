@@ -32,19 +32,19 @@ written with a "shim." Examples can be found in the doc directory.
 # Create the %%{_root_bindir} wrapper:
 %if 0%{?scl:1}
 mkdir -p %{buildroot}%{_root_bindir}
-install -p -m0755 %{SOURCE0} %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}ruby
-install -p -m0755 %{SOURCE1} %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rake
-install -p -m0755 %{SOURCE2} %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rails
+install -p -m0755 %{SOURCE0} %{buildroot}%{_root_bindir}/%{scl_prefix}ruby
+install -p -m0755 %{SOURCE1} %{buildroot}%{_root_bindir}/%{scl_prefix}rake
+install -p -m0755 %{SOURCE2} %{buildroot}%{_root_bindir}/%{scl_prefix}rails
 
 # Modify the shim/wrapper to include the correct scl
 %if "%{?scl}" == "ruby193"
-sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}ruby
-sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rake
-sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rails
+sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix}ruby
+sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix}rake
+sed -i 's/FIXMESCL/%{scl}\nif scl -l | grep -qw ^v8314$; then\nSCL="ruby193 v8314"\nfi/' %{buildroot}%{_root_bindir}/%{scl_prefix}rails
 %else
-sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}ruby
-sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rake
-sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix_ruby}rails
+sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix}ruby
+sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix}rake
+sed -i s/FIXMESCL/%{scl}/ %{buildroot}%{_root_bindir}/%{scl_prefix}rails
 %endif
 
 mkdir -p %{buildroot}%{wrapper_doc_dir}
@@ -62,9 +62,9 @@ exit 1
 %dir %{wrapper_doc_dir}
 %{wrapper_doc_dir}/*
 
-%{?scl:%{_root_bindir}/%{scl_prefix_ruby}ruby}
-%{?scl:%{_root_bindir}/%{scl_prefix_ruby}rake}
-%{?scl:%{_root_bindir}/%{scl_prefix_ruby}rails}
+%{?scl:%{_root_bindir}/%{scl_prefix}ruby}
+%{?scl:%{_root_bindir}/%{scl_prefix}rake}
+%{?scl:%{_root_bindir}/%{scl_prefix}rails}
 
 
 %changelog
