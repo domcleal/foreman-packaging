@@ -25,7 +25,7 @@ Requires:  %{?scl_prefix_ruby}rubygem(sprockets) >= 2.8
 Requires:  %{?scl_prefix_ruby}rubygem(sprockets) < 3
 Requires:  %{?scl_prefix_ruby}rubygem(actionpack) >= 3
 Requires:  %{?scl_prefix_ruby}rubygem(activesupport) >= 3
-%if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
+%if "%{?scl_ruby}" == "ruby193" || (0%{?el6} && 0%{!?scl:1})
 Requires:      %{?scl_prefix_ruby}ruby(abi)
 %else
 Requires:      %{?scl_prefix_ruby}ruby(release)
@@ -33,7 +33,7 @@ Requires:      %{?scl_prefix_ruby}ruby(release)
 
 BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
-%if "%{?scl}" == "ruby193" || (0%{?rhel} == 6 && "%{?scl}" == "")
+%if "%{?scl_ruby}" == "ruby193" || (0%{?el6} && 0%{!?scl:1})
 BuildRequires: %{?scl_prefix_ruby}ruby(abi)
 %else
 BuildRequires: %{?scl_prefix_ruby}ruby(release)
