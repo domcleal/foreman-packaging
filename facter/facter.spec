@@ -75,7 +75,7 @@ key off the values returned by facts.
 %install
 rm -rf %{buildroot}
 %{?scl:scl enable %{scl} - << \EOF}
-ruby install.rb --destdir=%{buildroot} --quick --no-rdoc --sitelibdir=%{facter_libdir}
+ruby install.rb --destdir=%{buildroot} --quick --no-rdoc --sitelibdir=%{facter_libdir} --bindir=%{_bindir} --mandir=%{_mandir}
 %{?scl:EOF}
 
 # Create directory for external facts
