@@ -30,6 +30,9 @@ BuildRequires: %{?scl_prefix_ruby}ruby(rubygems)
 # BuildRequires: %{?scl_prefix_ruby}rubygem(rspec)
 BuildArch: noarch
 Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
+# Obsoleting a package in ruby193 isn't enough as other packages in the
+# collection depend on the scl_prefix_ruby explicitly
+Provides: %{?scl_prefix_ruby}rubygem(%{gem_name}) = %{version}
 Obsoletes: ruby193-rubygem-%{gem_name}
 
 # OkJson is allowed to be bundled:
