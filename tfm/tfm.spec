@@ -19,7 +19,7 @@
 Summary: Package that installs %scl
 Name: %scl_name
 Version: 1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -116,6 +116,12 @@ export PKG_CONFIG_PATH=%{_libdir}/pkgconfig\${PKG_CONFIG_PATH:+:\${PKG_CONFIG_PA
 export GEM_PATH=%{gem_dir}:\${GEM_PATH:+\${GEM_PATH}}\${GEM_PATH:-\`scl enable %{scl_ruby} -- ruby -e "print Gem.path.join(':')"\`}
 EOF
 
+# additional rpm macros for builds in the collection to set the vendor correctly
+cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name}-config << EOF
+%%scl_vendor %{scl_vendor}
+%%_scl_prefix %{_scl_prefix}
+EOF
+
 # generate rpm macros file for dependent collections
 cat >> %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name}-scldevel << EOF
 %%scl_%{scl_name} %{scl}
@@ -184,5 +190,8 @@ selinuxenabled && load_policy || :
 %{_root_sysconfdir}/rpm/macros.%{scl_name}-scldevel
 
 %changelog
-* Wed Apr 02 2014 Dominic Cleal <dcleal@redhat.com> - 1-1
+* Wed Feb 04 2015 Dominic Cleal <dcleal@redhat.com> - 1.1-2
+- Provide changed vendor/dir prefix macros in tfm-build
+
+* Wed Apr 02 2014 Dominic Cleal <dcleal@redhat.com> - 1.0-1
 - Initial package.
