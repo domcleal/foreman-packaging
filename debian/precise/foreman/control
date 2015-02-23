@@ -90,7 +90,8 @@ Section: web
 Priority: extra
 Recommends: foreman-ec2
 Depends: foreman, libxml2-dev, libxslt1-dev, ${misc:Depends}
-Description: metapackage providing fog dependencies for Foreman
+Description: metapackage providing fog dependencies for Foreman,
+ adding OpenStack and Rackspace compute resource support.
  This package provides fog dependencies for Foreman, a
  flexible systems management web application.
  .
