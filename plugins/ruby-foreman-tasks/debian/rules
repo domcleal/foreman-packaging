@@ -13,6 +13,7 @@ PLUGIN = foreman-tasks
 
 build:
 	cp cache/* /usr/share/foreman/vendor/cache/
+	cp config/$(PLUGIN).yaml.example config/$(PLUGIN).yaml
 	cp $(PLUGIN).rb /usr/share/foreman/bundler.d/
 	cd /usr/share/foreman && ( \
 		bundle install --local && \
