@@ -25,4 +25,4 @@ build:
 	cp -rp /var/lib/foreman/public/apipie-cache/plugin/$(PLUGIN) ./apipie-cache/
 
 %:
-	dh $@ 
+	dh $@ --buildsystem=ruby --with ruby
