@@ -7,7 +7,7 @@ Name:       foreman-installer
 Epoch:      1
 Version:    1.10.0
 Release:    0.develop%{?dotalphatag}%{?dist}
-Summary:    Puppet-based installer for The Foreman
+Summary:    Pull request test
 Group:      Applications/System
 License:    GPLv3+ and ASL 2.0
 URL:        http://theforeman.org
