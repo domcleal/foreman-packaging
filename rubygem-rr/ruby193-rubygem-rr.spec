@@ -3,16 +3,6 @@
 
 %global gem_name rr
 
-%global rubyabi 1.9.1
-  
-%if 0%{?fedora} >= 17
-  %global rubyabi 1.9.1
-%endif
-
-%if 0%{?fedora} >= 19
-  %global rubyabi 2.0.0
-%endif
-
 Summary: RR (Double Ruby) is a test double framework 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 1.0.5
@@ -23,18 +13,7 @@ URL: http://pivotallabs.com
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Source1: http://s3.amazonaws.com/rubygem-rr/tests/v%{version}.tar.gz
 
-%if 0%{?fedora} >= 19
-Requires:       %{?scl_prefix_ruby}ruby(release)
-%endif
-
-%if 0%{?fedora} >= 17 && 0%{?fedora} < 19
-Requires:      %{?scl_prefix_ruby}ruby(abi) = %{rubyabi}
-%endif
-
-%if 0%{?fedora} <= 17
-Requires: %{?scl_prefix_ruby}ruby(rubygems) 
-%endif
-
+Requires: %{?scl_prefix_ruby}ruby(release)
 BuildRequires: %{?scl_prefix_ruby}ruby-irb
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildArch: noarch

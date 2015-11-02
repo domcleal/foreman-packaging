@@ -3,7 +3,6 @@
 
 # Generated from rspec-rails-2.6.0.gem by gem2rpm -*- rpm-spec -*-
 %global gem_name rspec-rails
-%global rubyabi 1.9.1
 
 Summary: RSpec-2 for Rails-3
 Name: %{?scl_prefix}rubygem-%{gem_name}
@@ -17,7 +16,7 @@ Group: Development/Languages
 License: MIT
 URL: http://github.com/rspec/rspec-rails
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
-Requires: %{?scl_prefix_ruby}ruby(abi) = %{rubyabi}
+Requires: %{?scl_prefix_ruby}ruby(release)
 Requires: %{?scl_prefix_ruby}ruby(rubygems)
 Requires: %{?scl_prefix_ruby}rubygem(activesupport) => 3.0
 Requires: %{?scl_prefix_ruby}rubygem(activesupport) < 4
@@ -28,7 +27,7 @@ Requires: %{?scl_prefix_ruby}rubygem(railties) < 4
 Requires: %{?scl_prefix_ruby}rubygem(rspec) => 2.11.0
 Requires: %{?scl_prefix_ruby}rubygem(rspec) < 2.12
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
-BuildRequires: %{?scl_prefix_ruby}ruby(abi) = %{rubyabi}
+BuildRequires: %{?scl_prefix_ruby}ruby(release)
 %if 0%{enable_test} > 0
 BuildRequires: %{?scl_prefix_ruby}rubygem(rspec) => 2.11.0
 BuildRequires: %{?scl_prefix_ruby}rubygem(rspec) < 2.12

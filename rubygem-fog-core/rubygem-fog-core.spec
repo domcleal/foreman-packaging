@@ -22,11 +22,7 @@ Requires: %{?scl_prefix_ruby}rubygem-mime-types
 Requires: %{?scl_prefix}rubygem-net-scp => 1.1.0
 Requires: %{?scl_prefix}rubygem-net-scp < 2
 Requires: %{?scl_prefix}rubygem-net-ssh >= 2.1.3
-%if 0%{?fedora} > 18
 Requires: %{?scl_prefix_ruby}ruby(release)
-%else
-Requires: %{?scl_prefix_ruby}ruby(abi) = 1.9.1
-%endif
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildArch: noarch
