@@ -17,7 +17,6 @@ Requires: %{?scl_prefix_ruby}ruby(rubygems)
 Requires: %{?scl_prefix_ruby}ruby
 
 Requires: %{?scl_prefix_ror}rubygem(railties) >= 3.1
-Requires: %{?scl_prefix_ror}rubygem(railties) < 4.0
 
 BuildRequires: %{?scl_prefix_ruby}ruby(release)
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
@@ -56,6 +55,9 @@ gem install --local --install-dir .%{gem_dir} \
 mkdir -p %{buildroot}%{gem_dir}
 cp -a .%{gem_dir}/* \
         %{buildroot}%{gem_dir}/
+
+# Remove any railties version specs
+sed -i '/railties/d' %{buildroot}%{gem_spec}
 
 %files
 %dir %{gem_instdir}
