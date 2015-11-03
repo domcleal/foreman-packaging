@@ -143,6 +143,7 @@ whitelist = foreman
   rubygem-highline
   rubygem-hirb
   rubygem-hirb-unicode
+  rubygem-i18n
   rubygem-jquery_pwstrength_bootstrap
   rubygem-jquery-turbolinks
   rubygem-jquery-ui-rails
