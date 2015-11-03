@@ -274,14 +274,26 @@ rake apache2
 
 # Install the gem.
 %{?scl:scl enable %{scl} - << \EOF}
+%if 0%{?el6} && 0%{!?scl:1}
 gem install -V \
             --local \
-            --install-dir %{buildroot}%{gem_dir} \
-            --bindir %{buildroot}%{_bindir} \
+            --install-dir ./%{gem_dir} \
+            --bindir ./%{_bindir} \
             --force \
             --rdoc \
             pkg/%{gem_name}-%{version}.gem
+%else
+%gem_install -n pkg/%{gem_name}-%{version}.gem
+%endif
 %{?scl:EOF}
+
+mkdir -p %{buildroot}%{gem_dir}
+cp -a .%{gem_dir}/* \
+        %{buildroot}%{gem_dir}/
+
+mkdir -p %{buildroot}%{_bindir}
+cp -pa .%{_bindir}/* \
+        %{buildroot}%{_bindir}/
 
 # Install locations.ini
 install -pm 0644 %{SOURCE11} %{buildroot}%{gem_instdir}/lib/phusion_passenger/
@@ -341,7 +353,7 @@ sed -i 's|\$localstatedir|%{_localstatedir}|' \
 
 # Bring over just the native binaries
 %{__mkdir_p} %{buildroot}%{gem_extdir_lib}/native
-install -m 0755 buildout/ruby/ruby*linux/passenger_native_support.so %{buildroot}%{gem_extdir_lib}/native
+install -m 0755 buildout/ruby/ruby*linux*/passenger_native_support.so %{buildroot}%{gem_extdir_lib}/native
 
 # Remove zero-length and non-needed files
 find %{buildroot}%{gem_instdir} -type f -size 0c -delete
