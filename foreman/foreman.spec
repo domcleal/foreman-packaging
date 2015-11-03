@@ -35,6 +35,10 @@ Requires: %{?scl_prefix_ruby}ruby(release)
 Requires: %{?scl_prefix_ruby}rubygems
 Requires: %{?scl_prefix_ruby}rubygem(rake) >= 0.8.3
 Requires: %{?scl_prefix}rubygem(bundler_ext)
+%if 0%{?scl:1}
+Requires: %{scl}-runtime >= 2
+Requires: %{scl}-runtime < 3
+%endif
 
 Requires: wget
 Requires: /etc/cron.d
@@ -48,7 +52,7 @@ Requires(postun): initscripts
 Requires: %{name}-debug
 
 # Gemfile
-Requires: %{?scl_prefix_ruby}rubygem(rails) = 4.1.5
+Requires: %{?scl_prefix_ror}rubygem(rails) = 4.1.5
 Requires: %{?scl_prefix_ruby}rubygem(json) >= 1.5
 Requires: %{?scl_prefix_ruby}rubygem(json) < 2.0
 Requires: %{?scl_prefix}rubygem(rest-client) >= 1.6
@@ -116,9 +120,9 @@ BuildRequires: %{scl_ruby_bin}
 BuildRequires: %{?scl_prefix_ruby}rubygems
 BuildRequires: %{?scl_prefix_ruby}rubygem(rake) >= 0.8.3
 BuildRequires: %{?scl_prefix}rubygem(bundler_ext)
-BuildRequires: %{?scl_prefix_ruby}rubygem(sqlite3)
+BuildRequires: %{?scl_prefix_ror}rubygem(sqlite3)
 # Gemfile
-BuildRequires: %{?scl_prefix_ruby}rubygem(rails) = 4.1.5
+BuildRequires: %{?scl_prefix_ror}rubygem(rails) = 4.1.5
 BuildRequires: %{?scl_prefix_ruby}rubygem(json) >= 1.5
 BuildRequires: %{?scl_prefix_ruby}rubygem(json) < 2.0
 BuildRequires: %{?scl_prefix}rubygem(rest-client) >= 1.6
@@ -173,11 +177,11 @@ BuildRequires: %{?scl_prefix}rubygem(rails-observers) < 1.0
 # assets
 BuildRequires: %{?scl_prefix}rubygem(ace-rails-ap) >= 4.0.0
 BuildRequires: %{?scl_prefix}rubygem(ace-rails-ap) < 4.1.0
-BuildRequires: %{?scl_prefix_ruby}rubygem(sass-rails) >= 4.0
-BuildRequires: %{?scl_prefix_ruby}rubygem(sass-rails) < 5.0
-BuildRequires: %{?scl_prefix_ruby}rubygem(uglifier) >= 1.0.3
-BuildRequires: %{?scl_prefix_ruby}rubygem(execjs) >= 1.4.0
-BuildRequires: %{?scl_prefix_ruby}rubygem(execjs) < 2.5.0
+BuildRequires: %{?scl_prefix_ror}rubygem(sass-rails) >= 4.0
+BuildRequires: %{?scl_prefix_ror}rubygem(sass-rails) < 5.0
+BuildRequires: %{?scl_prefix_ror}rubygem(uglifier) >= 1.0.3
+BuildRequires: %{?scl_prefix_ror}rubygem(execjs) >= 1.4.0
+BuildRequires: %{?scl_prefix_ror}rubygem(execjs) < 2.5.0
 BuildRequires: %{?scl_prefix}rubygem(jquery-rails) >= 2.0.3
 BuildRequires: %{?scl_prefix}rubygem(jquery-rails) < 2.1
 BuildRequires: %{?scl_prefix}rubygem(jquery-ui-rails) < 5.0.0
@@ -202,7 +206,7 @@ BuildRequires: %{?scl_prefix}rubygem(select2-rails) < 4.0
 BuildRequires: %{?scl_prefix}rubygem(underscore-rails) >= 1.8
 BuildRequires: %{?scl_prefix}rubygem(underscore-rails) < 2.0
 # therubyracer
-BuildRequires: %{?scl_prefix_ruby}rubygem(therubyracer)
+BuildRequires: %{?scl_prefix_ror}rubygem(therubyracer)
 # facter
 %if 0%{?scl:1}
 BuildRequires: %{?scl_prefix}rubygem(facter)
@@ -354,10 +358,10 @@ Group: Applications/system
 Requires: %{name} = %{version}-%{release}
 Requires: %{?scl_prefix}rubygem(ace-rails-ap) >= 4.0.0
 Requires: %{?scl_prefix}rubygem(ace-rails-ap) < 4.1.0
-Requires: %{?scl_prefix_ruby}rubygem(sass-rails) >= 4.0
-Requires: %{?scl_prefix_ruby}rubygem(sass-rails) < 5.0
-Requires: %{?scl_prefix_ruby}rubygem(uglifier) >= 1.0.3
-Requires: %{?scl_prefix_ruby}rubygem(execjs) >= 1.4.0
+Requires: %{?scl_prefix_ror}rubygem(sass-rails) >= 4.0
+Requires: %{?scl_prefix_ror}rubygem(sass-rails) < 5.0
+Requires: %{?scl_prefix_ror}rubygem(uglifier) >= 1.0.3
+Requires: %{?scl_prefix_ror}rubygem(execjs) >= 1.4.0
 Requires: %{?scl_prefix}rubygem(jquery-rails) >= 2.0.3
 Requires: %{?scl_prefix}rubygem(jquery-rails) < 2.1
 Requires: %{?scl_prefix}rubygem(jquery-ui-rails) < 5.0.0
@@ -382,7 +386,7 @@ Requires: %{?scl_prefix}rubygem(select2-rails) < 4.0
 Requires: %{?scl_prefix}rubygem(underscore-rails) >= 1.8
 Requires: %{?scl_prefix}rubygem(underscore-rails) < 2.0
 # therubyracer
-Requires: %{?scl_prefix_ruby}rubygem(therubyracer)
+Requires: %{?scl_prefix_ror}rubygem(therubyracer)
 
 %description assets
 Meta package to install asset pipeline support.
@@ -453,8 +457,8 @@ Meta Package to install requirements for postgresql support
 %package sqlite
 Summary: Foreman sqlite support
 Group:  Applications/System
-Requires: %{?scl_prefix_ruby}rubygem(sqlite3) >= 1.3.5
-Requires: %{?scl_prefix_ruby}rubygem(sqlite3) < 1.4.0
+Requires: %{?scl_prefix_ror}rubygem(sqlite3) >= 1.3.5
+Requires: %{?scl_prefix_ror}rubygem(sqlite3) < 1.4.0
 Requires: %{name} = %{version}-%{release}
 
 %description sqlite
@@ -638,7 +642,7 @@ unlink ./%{_datadir}/%{name}/db \\
 ln -sv \`pwd\`/%{_localstatedir}/lib/%{name}/db ./%{_datadir}/%{name}/db \\
 pushd ./%%{%{name}_dir} \\
 \\
-export GEM_PATH=%%{buildroot}%%{gem_dir}:\${GEM_PATH:+\${GEM_PATH}}\${GEM_PATH:-\`%{?scl:scl enable %%{scl_ruby} -- }ruby -e "print Gem.path.join(':')"\`} \\
+export GEM_PATH=%%{buildroot}%%{gem_dir}:\${GEM_PATH:+\${GEM_PATH}}\${GEM_PATH:-\`%{?scl:scl enable %%{scl_ror} -- }ruby -e "print Gem.path.join(':')"\`} \\
 cp %%{buildroot}%%{%{name}_bundlerd_dir}/%%{gem_name}.rb ./bundler.d/%%{gem_name}.rb \\
 unlink tmp \\
 \\

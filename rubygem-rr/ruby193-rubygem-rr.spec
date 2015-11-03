@@ -23,8 +23,8 @@ Provides: %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 # The following are for running test suite
 #BuildRequires: %{?scl_prefix_ruby}rubygem(minitest)
 #BuildRequires: %{?scl_prefix}rubygem(session)
-#BuildRequires: %{?scl_prefix_ruby}rubygem(diff-lcs)
-#BuildRequires: %{?scl_prefix_ruby}rubygem(rspec)
+#BuildRequires: %{?scl_prefix_ror}rubygem(diff-lcs)
+#BuildRequires: %{?scl_prefix_ror}rubygem(rspec)
 
 %description
 RR (Double Ruby) is a test double framework that features a rich selection of
