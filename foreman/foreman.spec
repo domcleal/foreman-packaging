@@ -498,6 +498,10 @@ plugins required for Foreman to work.
 #build locale files
 make -C locale all-mo
 
+# FIXME: workarounds for Rails 4 related issues
+# Remove GitHub references, incompatible with bundler_ext
+sed -i 's/, github:.*//' bundler.d/assets.rb
+
 #use Bundler_ext instead of Bundler
 mv Gemfile Gemfile.in
 cp config/database.yml.example config/database.yml
