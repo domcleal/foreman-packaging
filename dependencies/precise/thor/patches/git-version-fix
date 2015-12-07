@@ -1,0 +1,22 @@
+Index: ruby-thor/lib/thor/version.rb
+===================================================================
+--- ruby-thor.orig/lib/thor/version.rb	2014-01-16 14:37:54.577453978 +0100
++++ ruby-thor/lib/thor/version.rb	2014-01-16 14:37:54.573454002 +0100
+@@ -1,3 +1,3 @@
+ class Thor
+-  VERSION = '0.18.1.git20140116'
++  VERSION = '0.18.1.20140116'
+ end
+Index: ruby-thor/metadata.yml
+===================================================================
+--- ruby-thor.orig/metadata.yml	2014-01-16 12:30:43.347664453 +0100
++++ ruby-thor/metadata.yml	2014-01-16 14:38:05.553387998 +0100
+@@ -1,7 +1,7 @@
+ --- !ruby/object:Gem::Specification
+ name: thor
+ version: !ruby/object:Gem::Version
+-  version: 0.18.1.git20140116
++  version: 0.18.1.20140116
+   prerelease: 7
+ platform: ruby
+ authors:

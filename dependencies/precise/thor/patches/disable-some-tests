@@ -1,0 +1,60 @@
+This patch disables usage of simplecov, coveralls and fakeweb in the
+test suite, and is intended to be removed once these packages enter
+Debian.
+
+It also disables two tests that only test for correct usage of white-
+space and quoting, which fail because of encoding issues during build.
+
+diff --git a/spec/helper.rb b/spec/helper.rb
+index fbdb4ce..ab1e4d9 100644
+--- a/spec/helper.rb
++++ b/spec/helper.rb
+@@ -1,18 +1,5 @@
+ $TESTING = true
+ 
+-require "simplecov"
+-require "coveralls"
+-
+-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+-  SimpleCov::Formatter::HTMLFormatter,
+-  Coveralls::SimpleCov::Formatter
+-]
+-
+-SimpleCov.start do
+-  add_filter "/spec/"
+-  minimum_coverage(92.21)
+-end
+-
+ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+ require "thor"
+ require "thor/group"
+@@ -21,7 +8,6 @@ require "stringio"
+ require "rdoc"
+ require "rspec"
+ require "diff/lcs" # You need diff/lcs installed to run specs (but not to run Thor).
+-require "fakeweb"  # You need fakeweb installed to run specs (but not to run Thor).
+ 
+ # Set shell to basic
+ $0 = "thor"
+diff --git a/spec/quality_spec.rb b/spec/quality_spec.rb
+index 94f5100..23864ef 100644
+--- a/spec/quality_spec.rb
++++ b/spec/quality_spec.rb
+@@ -48,7 +48,7 @@ describe "The library itself" do
+     end
+   end
+ 
+-  it "has no malformed whitespace" do
++  xit "has no malformed whitespace" do
+     exempt = /\.gitmodules|\.marshal|fixtures|vendor|spec|ssl_certs|LICENSE/
+     error_messages = []
+     Dir.chdir(File.expand_path("../..", __FILE__)) do
+@@ -61,7 +61,7 @@ describe "The library itself" do
+     expect(error_messages.compact).to be_well_formed
+   end
+ 
+-  it "uses double-quotes consistently in specs" do
++  xit "uses double-quotes consistently in specs" do
+     included = /spec/
+     error_messages = []
+     Dir.chdir(File.expand_path("../", __FILE__)) do
