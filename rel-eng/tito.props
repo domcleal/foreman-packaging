@@ -21,6 +21,7 @@ blacklist = foreman-installer
   foreman-release-scl
   foreman-selinux
   rubygem-rack-protection
+  rubygem-rest-client
   rubygem-rkerberos
   rubygem-sinatra
   rubygem-tilt
@@ -33,6 +34,7 @@ blacklist = foreman-installer
   foreman-release-scl
   foreman-selinux
   rubygem-rack-protection
+  rubygem-rest-client
   rubygem-rkerberos
   rubygem-sinatra
   rubygem-tilt
