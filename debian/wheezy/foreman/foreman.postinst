@@ -3,6 +3,8 @@
 #
 # see: dh_installdeb(1)
 
+DEBUG=1
+
 [ -n "${DEBUG}" ] && set -x
 set -e
 
