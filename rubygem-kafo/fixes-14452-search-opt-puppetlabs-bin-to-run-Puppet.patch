@@ -1,0 +1,38 @@
+From 96c0dcf5c56f7682ecaaa1b4c027b3185f5fb895 Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Fri, 8 Apr 2016 14:36:23 +0100
+Subject: [PATCH 4/4] fixes #14452 - search /opt/puppetlabs/bin to run Puppet
+
+---
+ lib/kafo/puppet_command.rb | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/lib/kafo/puppet_command.rb b/lib/kafo/puppet_command.rb
+index 919d43c..5ea14cf 100644
+--- a/lib/kafo/puppet_command.rb
++++ b/lib/kafo/puppet_command.rb
+@@ -25,7 +25,7 @@ module Kafo
+           "echo '$kafo_config_file=\"#{@configuration.config_file}\" #{custom_answer_file} #{add_progress} #{@command}'",
+           '|',
+           "RUBYLIB=#{["#{@configuration.gem_root}/modules", ::ENV['RUBYLIB']].join(File::PATH_SEPARATOR)}",
+-          "puppet apply #{@options.join(' ')} #{@suffix}",
++          "#{puppet_path} apply #{@options.join(' ')} #{@suffix}",
+       ].join(' ')
+       @logger.debug result
+       result
+@@ -44,5 +44,13 @@ module Kafo
+           @configuration.kafo_modules_dir,
+       ].flatten.join(':')
+     end
++
++    def puppet_path
++      (::ENV['PATH'].split(File::PATH_SEPARATOR) + ['/opt/puppetlabs/bin']).find do |path|
++        binary = File.join(path, 'puppet')
++        return binary if File.executable?(binary)
++      end
++      'puppet'
++    end
+   end
+ end
+--
+2.4.3

@@ -1,0 +1,249 @@
+From be88e95aefc26e4e3f6331aa7e1977b4d7908216 Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Wed, 6 Apr 2016 14:07:07 +0100
+Subject: [PATCH 2/4] fixes #14450 - replace validation functions with internal
+ impls
+
+Currently kafo_parsers returns a list of validation functions using the
+Puppet AST, and kafo loads these from the modulepath and executes them
+in a mock Puppet environment.
+
+This reimplements the common stdlib functions in kafo, removing the need
+to set up and run Puppet functions themselves. The code accepts either
+the existing AST objects or simpler objects from the parser that respond
+to #name and #arguments, allowing this to be switched out in
+kafo_parsers later (so the Puppet library isn't needed at all).
+---
+ lib/kafo/param.rb     |  34 +++++++++----
+ lib/kafo/validator.rb | 136 +++++++++++++++++++++++++++++++-------------------
+ 2 files changed, 107 insertions(+), 63 deletions(-)
+
+diff --git a/lib/kafo/param.rb b/lib/kafo/param.rb
+index 3ed09df..724e77e 100644
+--- a/lib/kafo/param.rb
++++ b/lib/kafo/param.rb
+@@ -73,24 +73,21 @@ module Kafo
+     end
+
+     def valid?
+-      validations = self.module.validations(self)
+       # we get validations that can also run on other arguments, we need to take only current param
+       # also we want to clone validations so we don't interfere
+-      validations.map! do |v|
+-        v = v.clone
+-        if v.name == 'validate_re'
+-          # validate_re does not take more variables as arguments, instead we need to pass all arguments
+-          args = v.arguments
++      validations = self.module.validations(self).map do |v|
++        # These functions do not take more variables as arguments, instead we need to pass all arguments
++        if v.name == 'validate_re' || v.name == 'validate_integer'
++          args = v.arguments.to_a
+         else
+           args = v.arguments.select { |a| a.to_s == "$#{self.name}" }
+         end
+-        v.arguments = Puppet::Parser::AST::ASTArray.new :children => args
+-        v
++        interpret_validation_args(args)
++        {:name => v.name, :arguments => args}
+       end
+
+-      validator = Validator.new([self])
+-      validations.map! { |v| v.evaluate(validator) }
+-      validations.all?
++      validator = Validator.new
++      validations.all? { |v| validator.send(v[:name], v[:arguments]) }
+     end
+
+     # To be overwritten in children
+@@ -119,6 +116,21 @@ module Kafo
+     def evaluate_condition(context = [])
+       Condition.new(condition, context).evaluate
+     end
++
++    def interpret_validation_args(args)
++      args.map! do |arg|
++        if arg.to_s == "$#{self.name}"
++          self.value
++        elsif arg.respond_to? :value
++          arg.value
++        else
++          arg
++        end
++      end
++      args.map! do |arg|
++        arg == :undef ? nil : arg
++      end
++    end
+   end
+ end
+
+diff --git a/lib/kafo/validator.rb b/lib/kafo/validator.rb
+index d09ed62..da69bd8 100644
+--- a/lib/kafo/validator.rb
++++ b/lib/kafo/validator.rb
+@@ -2,79 +2,111 @@
+ module Kafo
+   class Validator
+
+-    def self.prepare_functions
+-      return true if @reset || !Puppet::Parser::Functions.respond_to?(:reset)
+-      Puppet::Parser::Functions.reset
+-      @reset = true
++    def initialize
++      @logger = KafoConfigure.logger
+     end
+
+-    def initialize(params)
+-      self.class.prepare_functions
+-      definitions = KafoConfigure.module_dirs.map do |dir|
+-        validate_files = dir + '/*/lib/puppet/parser/functions/validate_*.rb'
+-        is_function_files = dir + '/*/lib/puppet/parser/functions/is_*.rb'
+-        Dir.glob(validate_files) + Dir.glob(is_function_files)
+-      end.flatten
+-
+-      definitions.each do |file|
+-        require File.expand_path(file)
++    def validate_absolute_path(args)
++      args.each do |arg|
++        unless arg.to_s.start_with?('/')
++          @logger.error "#{arg.inspect} is not an absolute path."
++          return false
++        end
+       end
++      return true
++    end
+
+-      @params = params
+-      @logger = KafoConfigure.logger
++    def validate_array(args)
++      args.each do |arg|
++        unless arg.is_a?(Array)
++          @logger.error "#{arg.inspect} is not a valid array."
++          return false
++        end
++      end
++      return true
++    end
+
+-      @cache ||= Hash.new do |hash, key|
+-        @logger.debug "Looked for #{key}"
+-        param     = @params.select { |p| p.name == key.to_s }.first
+-        hash[key] = param.nil? ? nil : param.value
++    def validate_bool(args)
++      args.each do |arg|
++        unless arg.is_a?(TrueClass) || arg.is_a?(FalseClass)
++          @logger.error "#{arg.inspect} is not a valid boolean."
++          return false
++        end
+       end
++      return true
+     end
+
+-    def lookupvar(name, options = {})
+-      @cache[name]
++    def validate_hash(args)
++      args.each do |arg|
++        unless arg.is_a?(Hash)
++          @logger.error "#{arg.inspect} is not a valid hash."
++          return false
++        end
++      end
++      return true
+     end
+
+-    # for puppet >= 3
+-    def include?(value)
+-      true
++    def validate_integer(args)
++      value = args[0]
++      max = args[1]
++      min = args[2]
++      int = Integer(value.to_s)
++      if min && int < min.to_i
++        @logger.error "#{value} must be at least #{min}."
++        return false
++      end
++      if max && int > max.to_i
++        @logger.error "#{value} must be less than #{max}."
++        return false
++      end
++      return true
++    rescue TypeError, ArgumentError
++      @logger.error "#{value.inspect} is not a valid integer."
++      return false
+     end
+
+-    # for puppet >= 3
+-    def [](value, *args)
+-      lookupvar(value)
++    def validate_listen_on(args)
++      valid_values = ['http', 'https', 'both']
++      args.each do |arg|
++        unless valid_values.include?(arg)
++          @logger.error "#{arg.inspect} is not a valid value.  Valid values are: #{valid_values.join(", ")}"
++          return false
++        end
++      end
++      return true
+     end
+
+-    def method_missing(method, *args, &block)
+-      method.to_s =~ /^function_(.*)$/
+-      super unless $1
+-      super unless Puppet::Parser::Functions.function($1)
+-      # In odd circumstances, this might not end up defined by the previous
+-      # method, so we might as well be certain.
+-      if engine.respond_to? method
+-        @logger.debug "calling #{method.inspect} with #{args.inspect}"
+-        engine.send(method, *args)
+-        true
++    def validate_re(args)
++      value = args[0]
++      regexes = args[1]
++      regexes = [regexes] unless regexes.is_a?(Array)
++      message = args[2] || "#{value.inspect} does not match the accepted inputs: #{regexes.join(", ")}"
++
++      if regexes.all? { |rx| value =~ Regexp.compile(rx) }
++        return true
+       else
+-        raise Puppet::DevError, "Function #{$1} not defined despite being loaded!"
++        @logger.error message
++        return false
+       end
+-    rescue Puppet::ParseError => e
+-      @logger.error e.message
+-      return false
+     end
+
+-    private
+-
+-    def engine
+-      @engine ||= begin
+-        klass = Class.new
+-        env = Puppet::PUPPETVERSION.start_with?('2.') ? nil : lookup_current_environment
+-        klass.send :include, Puppet::Parser::Functions.environment_module(env)
+-        klass.new
++    def validate_string(args)
++      args.each do |arg|
++        unless arg.is_a?(String)
++          @logger.error "#{arg.inspect} is not a valid string."
++          return false
++        end
+       end
++      return true
+     end
+
+-    def lookup_current_environment
+-      @current_environment ||= Puppet.respond_to?(:lookup) ? Puppet.lookup(:current_environment) : Puppet::Node::Environment.current
++    def method_missing(method, *args, &block)
++      if method.to_s.start_with?('validate_')
++        @logger.debug "Skipping validation with #{method} as it's not implemented in Kafo"
++        return true
++      else
++        super
++      end
+     end
+   end
+ end
+--
+2.4.3

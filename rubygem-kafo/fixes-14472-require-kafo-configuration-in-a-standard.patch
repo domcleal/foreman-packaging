@@ -1,0 +1,32 @@
+From edee08deb4d02a961c65f471059eed38aec6686a Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Tue, 5 Apr 2016 08:32:36 +0100
+Subject: [PATCH] fixes #14472 - require kafo/configuration in a standard way
+
+Don't assume location of kafo lib/ dir in relation to the bin script.
+---
+ bin/kafo-export-params | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/bin/kafo-export-params b/bin/kafo-export-params
+index 0fb8153..6b8a440 100755
+--- a/bin/kafo-export-params
++++ b/bin/kafo-export-params
+@@ -3,13 +3,11 @@ require 'rubygems'
+ require 'ostruct'
+ require 'clamp'
+ require 'logging'
+-require 'kafo/string_helper'
++require 'kafo/configuration'
+ require 'kafo/exceptions'
++require 'kafo/string_helper'
+ require 'logger'
+
+-$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'kafo'))
+-require 'configuration'
+-
+ KafoConfigure = OpenStruct.new
+ def KafoConfigure.exit(code)
+   Kernel.exit(1)
+--
+2.4.3

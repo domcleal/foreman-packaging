@@ -11,6 +11,11 @@ Group: Development/Libraries
 License: GPLv3+
 URL: https://github.com/theforeman/kafo
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
+Patch0: fixes-14472-require-kafo-configuration-in-a-standard.patch
+Patch1: fixes-14447-add-cache-around-parser-using-YAML-file.patch
+Patch2: fixes-14450-replace-validation-functions-with-intern.patch
+Patch3: refs-14448-use-kafo_parsers-.find_available-to-load-.patch
+Patch4: fixes-14452-search-opt-puppetlabs-bin-to-run-Puppet.patch
 %if 0%{?el6} && 0%{!?scl:1}
 Requires: %{?scl_prefix}ruby(abi)
 %else
@@ -59,6 +64,14 @@ gem install --local --install-dir .%{gem_dir} \
 %build
 sed -i "/add_runtime_dependency.*puppet/d" ./%{gem_spec}
 sed -i "/add_dependency.*puppet/d" ./%{gem_spec}
+
+pushd ./%{gem_instdir}
+patch -p1 < %{PATCH0}
+patch -p1 < %{PATCH1}
+patch -p1 < %{PATCH2}
+patch -p1 < %{PATCH3}
+patch -p1 < %{PATCH4}
+popd
 
 %install
 mkdir -p %{buildroot}%{gem_dir}

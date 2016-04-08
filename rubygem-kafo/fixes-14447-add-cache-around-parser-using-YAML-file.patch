@@ -1,0 +1,308 @@
+From 203bfe64e81125911c3e039d055eb36fce968405 Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Wed, 30 Mar 2016 16:25:59 +0100
+Subject: [PATCH 1/4] fixes #14447 - add cache around parser using YAML file
+
+A cache of parsed modules can be configured with `:parser_cache_path` to
+skip calls out to kafo_parsers when loading Puppet modules. This helps
+when no parser is available for the current Puppet installation (e.g.
+under Puppet 4 with AIO at the time of writing), and may provide a small
+peformance benefit.
+
+The cache can be generated with `kafo-export-params -f parsercache
+--no-parser-cache`.
+
+The cache is skipped if the mtime of the manifest is greater than the
+mtime when the cache was generated, causing Kafo to use kafo_parsers as
+normal.
+---
+ bin/kafo-export-params          | 56 ++++++++++++++++++++++++++++-------------
+ lib/kafo/configuration.rb       |  9 ++++++-
+ lib/kafo/param_builder.rb       |  2 +-
+ lib/kafo/parser_cache_reader.rb | 46 +++++++++++++++++++++++++++++++++
+ lib/kafo/parser_cache_writer.rb | 14 +++++++++++
+ lib/kafo/puppet_module.rb       | 11 +++++---
+ 6 files changed, 115 insertions(+), 23 deletions(-)
+ create mode 100644 lib/kafo/parser_cache_reader.rb
+ create mode 100644 lib/kafo/parser_cache_writer.rb
+
+diff --git a/bin/kafo-export-params b/bin/kafo-export-params
+index 6b8a440..35655e0 100755
+--- a/bin/kafo-export-params
++++ b/bin/kafo-export-params
+@@ -5,8 +5,10 @@ require 'clamp'
+ require 'logging'
+ require 'kafo/configuration'
+ require 'kafo/exceptions'
++require 'kafo/parser_cache_writer'
+ require 'kafo/string_helper'
+ require 'logger'
++require 'yaml'
+
+ KafoConfigure = OpenStruct.new
+ def KafoConfigure.exit(code)
+@@ -15,36 +17,54 @@ end
+
+ module Kafo
+   class KafoExportParams < Clamp::Command
+-    TYPES = %w(md html asciidoc)
++    TYPES = %w(md html asciidoc parsercache)
+
+     option ['-c', '--config'], 'FILE', 'Config file for which should we generate params',
+            :required => true
+
+     option ['-f', '--format'], 'FORMAT',
+-           'Config file for which should we generate params', :default => 'md' do |format|
++           "Format parameters will be written in, valid options: #{TYPES.join(',')}", :default => 'md' do |format|
+       format = format.downcase
+       raise ArgumentError unless TYPES.include?(format)
+       format
+     end
+
++    option ['-o', '--output'], 'FILE', 'Output file to write parameters into', :default => '-'
++
++    option '--[no-]parser-cache', :flag, 'Enable or disable the parser cache, disable for fresh results', :default => true
++
+     def execute
+       c                         = Configuration.new(config, false)
++      c.app[:parser_cache_path] = nil unless parser_cache?
+       KafoConfigure.config      = c
+       KafoConfigure.root_dir    = File.expand_path(c.app[:installer_dir])
+       KafoConfigure.module_dirs = File.expand_path(c.app[:module_dirs])
+-      KafoConfigure.logger      = Logger.new(STDOUT)
++      KafoConfigure.logger      = Logger.new(STDERR)
+
+-      exporter = self.class.const_get(format.capitalize).new(c)
++      if output == '-'
++        file = STDOUT
++      else
++        file = File.open(output, 'w')
++      end
++
++      exporter = self.class.const_get(format.capitalize).new(c, file)
+       exporter.print_out
+     end
+
+-    class Html
+-      include StringHelper
+-
+-      def initialize(config)
++    class Writer
++      def initialize(config, file)
+         @config = config
++        @file = file
+       end
+
++      def puts(*args)
++        @file.puts(*args)
++      end
++    end
++
++    class Html < Writer
++      include StringHelper
++
+       def print_out
+         puts '<div id="installer-options">'
+         puts '  <table class="table table-bordered table-condensed">'
+@@ -77,13 +97,9 @@ module Kafo
+       end
+     end
+
+-    class Asciidoc
++    class Asciidoc < Writer
+       include StringHelper
+
+-      def initialize(config)
+-        @config = config
+-      end
+-
+       def print_out
+         @config.modules.sort.each do |mod|
+           puts "Parameters for '#{mod.name}':\n\n"
+@@ -97,12 +113,12 @@ module Kafo
+       end
+     end
+
+-    class Md
++    class Md < Writer
+       include StringHelper
+
+-      def initialize(config)
+-        @config = config
+-        @max    = max_description_length
++      def initialize(*args)
++        super
++        @max = max_description_length
+       end
+
+       def print_out
+@@ -127,6 +143,12 @@ module Kafo
+         doc_lengths.max
+       end
+     end
++
++    class Parsercache < Writer
++      def print_out
++        puts Kafo::ParserCacheWriter.write(@config.modules).to_yaml
++      end
++    end
+   end
+ end
+
+diff --git a/lib/kafo/configuration.rb b/lib/kafo/configuration.rb
+index d153153..1dcafa7 100644
+--- a/lib/kafo/configuration.rb
++++ b/lib/kafo/configuration.rb
+@@ -27,7 +27,8 @@ module Kafo
+         :hook_dirs            => [],
+         :custom               => {},
+         :low_priority_modules => [],
+-        :verbose_log_level    => 'info'
++        :verbose_log_level    => 'info',
++        :parser_cache_path    => './config/parser_cache.json'
+     }
+
+     def initialize(file, persist = true)
+@@ -257,6 +258,12 @@ module Kafo
+       @config_file.gsub(/\.yaml$/, '.migrations')
+     end
+
++    def parser_cache
++      if app[:parser_cache_path]
++        @parser_cache ||= Kafo::ParserCacheReader.new_from_file(File.expand_path(app[:parser_cache_path]))
++      end
++    end
++
+     private
+
+     def custom_storage
+diff --git a/lib/kafo/param_builder.rb b/lib/kafo/param_builder.rb
+index 081390a..b0720ea 100644
+--- a/lib/kafo/param_builder.rb
++++ b/lib/kafo/param_builder.rb
+@@ -79,7 +79,7 @@ module Kafo
+     end
+
+     def get_type(type)
+-      type = type.capitalize
++      type = (type || 'string').capitalize
+       Params.const_defined?(type) ? Params.const_get(type) : raise(TypeError, "undefined parameter type '#{type}'")
+     end
+   end
+diff --git a/lib/kafo/parser_cache_reader.rb b/lib/kafo/parser_cache_reader.rb
+new file mode 100644
+index 0000000..1c0325d
+--- /dev/null
++++ b/lib/kafo/parser_cache_reader.rb
+@@ -0,0 +1,46 @@
++module Kafo
++  class ParserCacheReader
++    def self.new_from_file(cache_path)
++      if cache_path.nil? || cache_path.empty?
++        logger.debug "No parser cache configured in :parser_cache_path, skipping setup"
++        return nil
++      end
++
++      unless File.exist?(cache_path)
++        logger.warn "Parser cache configured at #{cache_path} is missing, skipping setup"
++        return nil
++      end
++
++      parsed = YAML.load(File.read(cache_path))
++      if !parsed.is_a?(Hash) || parsed[:version] != 1 || !parsed[:files].is_a?(Hash)
++        logger.warn "Parser cache is from a different version of Kafo, skipping setup"
++        return nil
++      end
++
++      new(parsed)
++    end
++
++    def self.logger
++      KafoConfigure.logger
++    end
++
++    def initialize(cache)
++      @cache = cache
++    end
++
++    def logger
++      KafoConfigure.logger
++    end
++
++    def get(key, manifest_path)
++      return nil unless @cache[:files].has_key?(key)
++
++      if @cache[:files][key][:mtime] && File.mtime(manifest_path).to_i > @cache[:files][key][:mtime]
++        logger.debug "Parser cache for #{manifest_path} is outdated, ignoring cache entry"
++        return nil
++      end
++
++      @cache[:files][key][:data]
++    end
++  end
++end
+diff --git a/lib/kafo/parser_cache_writer.rb b/lib/kafo/parser_cache_writer.rb
+new file mode 100644
+index 0000000..dcfddfd
+--- /dev/null
++++ b/lib/kafo/parser_cache_writer.rb
+@@ -0,0 +1,14 @@
++module Kafo
++  class ParserCacheWriter
++    def self.write(modules)
++      {
++        :version => 1,
++        :files => Hash[modules.sort.map { |m| write_module(m) }]
++      }
++    end
++
++    def self.write_module(mod)
++      [mod.identifier, {:data => mod.raw_data, :mtime => File.mtime(mod.manifest_path).to_i}]
++    end
++  end
++end
+diff --git a/lib/kafo/puppet_module.rb b/lib/kafo/puppet_module.rb
+index 1661ece..84c5429 100644
+--- a/lib/kafo/puppet_module.rb
++++ b/lib/kafo/puppet_module.rb
+@@ -1,6 +1,7 @@
+ # encoding: UTF-8
+ require 'kafo/param'
+ require 'kafo/param_builder'
++require 'kafo/parser_cache_reader'
+ require 'kafo_parsers/puppet_module_parser'
+ require 'kafo/validator'
+
+@@ -9,7 +10,7 @@ module Kafo
+     PRIMARY_GROUP_NAME = 'Parameters'
+
+     attr_reader :name, :identifier, :params, :dir_name, :class_name, :manifest_name, :manifest_path,
+-                :groups, :params_path, :params_class_name, :configuration
++                :groups, :params_path, :params_class_name, :configuration, :raw_data
+
+     def initialize(identifier, parser = KafoParsers::PuppetModuleParser, configuration = KafoConfigure.config)
+       @identifier        = identifier
+@@ -27,6 +28,7 @@ module Kafo
+       end
+       @manifest_path     = File.join(module_dir, module_manifest_path)
+       @parser            = parser
++      @parser_cache      = @configuration.parser_cache
+       @validations       = []
+       @logger            = KafoConfigure.logger
+       @groups            = {}
+@@ -48,9 +50,10 @@ module Kafo
+
+     def parse(builder_klass = ParamBuilder)
+       @params      = []
+-      raw_data     = @parser.parse(manifest_path)
+-      builder      = builder_klass.new(self, raw_data)
+-      @validations = raw_data[:validations]
++      @raw_data    = @parser_cache.get(identifier, manifest_path) if @parser_cache
++      @raw_data  ||= @parser.parse(manifest_path)
++      builder      = builder_klass.new(self, @raw_data)
++      @validations = @raw_data[:validations]
+
+       builder.validate
+       @params = builder.build_params
+--
+2.4.3
