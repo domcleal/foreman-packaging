@@ -1,28 +1,16 @@
-From 0849fea3739fb6196543a87472778b09c2ebb267 Mon Sep 17 00:00:00 2001
+From c5d35326bf2d7107b36b1160929388d8f60f2ad7 Mon Sep 17 00:00:00 2001
 From: Dominic Cleal <dominic@cleal.org>
 Date: Thu, 7 Apr 2016 15:43:05 +0100
-Subject: [PATCH 2/2] refs #14450 - remove Puppet ASTs from validations list
+Subject: [PATCH] refs #14450 - remove Puppet ASTs from validations list
 
 ---
- lib/kafo_parsers/parsers.rb              |  3 ++-
- lib/kafo_parsers/puppet_module_parser.rb |  5 ++++-
+ lib/kafo_parsers/puppet_module_parser.rb |  8 +++++++-
  lib/kafo_parsers/validation.rb           | 10 ++++++++++
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ 2 files changed, 17 insertions(+), 1 deletion(-)
  create mode 100644 lib/kafo_parsers/validation.rb
 
-diff --git a/lib/kafo_parsers/parsers.rb b/lib/kafo_parsers/parsers.rb
-index 27828f6..c1176ef 100644
---- a/lib/kafo_parsers/parsers.rb
-+++ b/lib/kafo_parsers/parsers.rb
-@@ -1,4 +1,5 @@
--require 'kafo_parsers/puppet_module_parser.rb'
-+require 'kafo_parsers/puppet_module_parser'
-+require 'kafo_parsers/validation'
-
- module KafoParsers
-   module Parsers
 diff --git a/lib/kafo_parsers/puppet_module_parser.rb b/lib/kafo_parsers/puppet_module_parser.rb
-index 18548e2..e493c5e 100644
+index 18548e2..bc119a7 100644
 --- a/lib/kafo_parsers/puppet_module_parser.rb
 +++ b/lib/kafo_parsers/puppet_module_parser.rb
 @@ -1,5 +1,6 @@
@@ -32,13 +20,16 @@ index 18548e2..e493c5e 100644
 
  module KafoParsers
    # Based on ideas from puppet-parse by Johan van den Dorpe
-@@ -75,7 +76,9 @@ module KafoParsers
+@@ -75,7 +76,12 @@ module KafoParsers
 
      def validations(param = nil)
        return [] if @object.code.nil?
 -      @object.code.select { |stmt| stmt.is_a?(Puppet::Parser::AST::Function) && stmt.name =~ /^validate_/ }
 +      @object.code.select { |stmt| stmt.is_a?(Puppet::Parser::AST::Function) && stmt.name =~ /^validate_/ }.map do |v|
-+        Validation.new(v.name, v.arguments.map(&:to_s))
++        args = v.arguments.map do |arg|
++          arg.is_a?(Puppet::Parser::AST::Variable) ? arg.to_s : arg.value
++        end
++        Validation.new(v.name, args)
 +      end
      end
 
