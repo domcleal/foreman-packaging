@@ -1,0 +1,97 @@
+From 69ffbeb534219f155573e755a3ebbd337e081ccd Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Mon, 4 Apr 2016 13:52:06 +0100
+Subject: [PATCH 1/2] fixes #14448 - change Puppet to a soft dep, add helper to
+ find parser
+
+Each parser's `.available?` method now tries to load any dependencies
+and indicates if the parser is usable. An exception may be thrown with
+more details.
+
+`KafoParsers::Parsers.find_available` finds the first parser that's
+available, which should be the preferred way of using kafo_parsers.
+---
+ lib/kafo_parsers/exceptions.rb           |  9 +++++++++
+ lib/kafo_parsers/parsers.rb              | 20 ++++++++++++++++++++
+ lib/kafo_parsers/puppet_module_parser.rb |  9 ++++++++-
+ 3 files changed, 37 insertions(+), 1 deletion(-)
+ create mode 100644 lib/kafo_parsers/parsers.rb
+
+diff --git a/lib/kafo_parsers/exceptions.rb b/lib/kafo_parsers/exceptions.rb
+index 86ba503..368a59b 100644
+--- a/lib/kafo_parsers/exceptions.rb
++++ b/lib/kafo_parsers/exceptions.rb
+@@ -6,4 +6,13 @@ module KafoParsers
+   class ModuleName < StandardError
+   end
+
++  class ParserNotAvailable < StandardError
++    def initialize(wrapped)
++      @wrapped = wrapped
++    end
++
++    def message
++      @wrapped.message
++    end
++  end
+ end
+diff --git a/lib/kafo_parsers/parsers.rb b/lib/kafo_parsers/parsers.rb
+new file mode 100644
+index 0000000..27828f6
+--- /dev/null
++++ b/lib/kafo_parsers/parsers.rb
+@@ -0,0 +1,20 @@
++require 'kafo_parsers/puppet_module_parser.rb'
++
++module KafoParsers
++  module Parsers
++    def self.all
++      [PuppetModuleParser]
++    end
++
++    def self.find_available(options = {})
++      all.find do |provider|
++        begin
++          provider.available?
++        rescue ParserNotAvailable => e
++          options[:logger].debug "Provider #{provider} not available: #{e.message}"
++          false
++        end
++      end
++    end
++  end
++end
+diff --git a/lib/kafo_parsers/puppet_module_parser.rb b/lib/kafo_parsers/puppet_module_parser.rb
+index d1f89c0..18548e2 100644
+--- a/lib/kafo_parsers/puppet_module_parser.rb
++++ b/lib/kafo_parsers/puppet_module_parser.rb
+@@ -1,5 +1,4 @@
+ # encoding: UTF-8
+-require 'puppet'
+ require 'kafo_parsers/doc_parser'
+
+ module KafoParsers
+@@ -10,6 +9,13 @@ module KafoParsers
+   class PuppetModuleParser
+     @@puppet_initialized = false
+
++    def self.available?
++      require 'puppet'
++      [2, 3].include?(Puppet::PUPPETVERSION.to_i)
++    rescue LoadError => e
++      raise KafoParsers::ParserNotAvailable.new(e)
++    end
++
+     # You can call this method to get all supported information from a given manifest
+     #
+     # @param [ String ] manifest file path to parse
+@@ -32,6 +38,7 @@ module KafoParsers
+       raise KafoParsers::ModuleName, "File not found #{file}, check your answer file" unless File.exists?(file)
+
+       unless @@puppet_initialized
++        require 'puppet'
+         if Puppet::PUPPETVERSION.to_i >= 3
+           Puppet.initialize_settings
+         else
+--
+2.4.3

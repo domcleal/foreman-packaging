@@ -11,6 +11,9 @@ Group: Development/Libraries
 License: GPLv3+
 URL: https://github.com/theforeman/kafo_parsers
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
+Patch0: fixes-14448-change-Puppet-to-a-soft-dep-add-helper-t.patch
+Patch1: fixes-14473-set-default-file-reading-encoding-to-UTF.patch
+Patch2: refs-14450-remove-Puppet-ASTs-from-validations-list.patch
 %if 0%{?el6} && 0%{!?scl:1}
 Requires: %{?scl_prefix}ruby(abi)
 %else
@@ -53,6 +56,12 @@ gem install --local --install-dir .%{gem_dir} \
 %build
 sed -i "/add_runtime_dependency.*puppet/d" ./%{gem_spec}
 sed -i "/add_dependency.*puppet/d" ./%{gem_spec}
+
+pushd ./%{gem_instdir}
+patch -p1 < %{PATCH0}
+patch -p1 < %{PATCH1}
+patch -p1 < %{PATCH2}
+popd
 
 %install
 mkdir -p %{buildroot}%{gem_dir}

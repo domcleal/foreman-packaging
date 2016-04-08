@@ -1,0 +1,23 @@
+From c04662f237741de23aa159eba5810481f2f9a06b Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Tue, 5 Apr 2016 08:54:49 +0100
+Subject: [PATCH] fixes #14473 - set default file reading encoding to UTF-8
+
+---
+ lib/kafo_parsers/puppet_module_parser.rb | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/kafo_parsers/puppet_module_parser.rb b/lib/kafo_parsers/puppet_module_parser.rb
+index 757a1d1..d1f89c0 100644
+--- a/lib/kafo_parsers/puppet_module_parser.rb
++++ b/lib/kafo_parsers/puppet_module_parser.rb
+@@ -37,6 +37,7 @@ module KafoParsers
+         else
+           Puppet.parse_config
+         end
++        Encoding.default_external = Encoding::UTF_8 if defined?(Encoding) && Encoding.respond_to?(:default_external=)
+         @@puppet_initialized = true
+       end
+
+--
+2.4.3
