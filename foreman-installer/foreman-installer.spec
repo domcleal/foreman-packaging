@@ -6,7 +6,7 @@
 Name:       foreman-installer
 Epoch:      1
 Version:    1.12.0
-Release:    0.develop%{?dotalphatag}%{?dist}
+Release:    2.develop%{?dotalphatag}%{?dist}
 Summary:    Puppet-based installer for The Foreman
 Group:      Applications/System
 License:    GPLv3+ and ASL 2.0
