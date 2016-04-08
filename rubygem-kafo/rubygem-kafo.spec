@@ -21,7 +21,6 @@ Requires: %{?scl_prefix}ruby(abi)
 %else
 Requires: %{?scl_prefix}ruby(release)
 %endif
-Requires: %{?scl_prefix}puppet < 4.0.0
 Requires: %{?scl_prefix}rubygem(logging) < 3.0.0
 Requires: %{?scl_prefix}rubygem(clamp) >= 0.6.2
 Requires: %{?scl_prefix}rubygem(highline) < 2.0
