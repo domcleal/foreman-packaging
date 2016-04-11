@@ -16,6 +16,7 @@ Patch1: fixes-14447-add-cache-around-parser-using-YAML-file.patch
 Patch2: fixes-14450-replace-validation-functions-with-intern.patch
 Patch3: refs-14448-use-kafo_parsers-.find_available-to-load-.patch
 Patch4: fixes-14452-search-opt-puppetlabs-bin-to-run-Puppet.patch
+Patch5: fixes-14568-don-t-pass-any-default-value-for-undef-c.patch
 %if 0%{?el6} && 0%{!?scl:1}
 Requires: %{?scl_prefix}ruby(abi)
 %else
@@ -70,6 +71,7 @@ patch -p1 < %{PATCH1}
 patch -p1 < %{PATCH2}
 patch -p1 < %{PATCH3}
 patch -p1 < %{PATCH4}
+patch -p1 < %{PATCH5}
 popd
 
 %install

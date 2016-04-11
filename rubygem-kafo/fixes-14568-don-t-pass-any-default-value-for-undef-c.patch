@@ -1,0 +1,47 @@
+From 5453fb757685c0383084d14f3096b06b2719f13a Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Mon, 11 Apr 2016 10:25:35 +0100
+Subject: [PATCH] fixes #14568 - don't pass any default value for undef class
+ parameters
+
+Under Puppet 4, dump_values returned the parameter name for any undef
+values, as lookupvar now returned nil rather than :undef. This has been
+removed so it simply returns nil in all cases.
+
+Secondly, when instantiating classes with undef parameter values, don't
+pass the parameter at all when it's nil (undef) to allow it to be
+determined by Puppet. Passing an undef value causes the parameter to be
+set to the value undef, rather than meaning "not set".
+---
+ modules/kafo_configure/lib/puppet/parser/functions/dump_values.rb | 2 +-
+ modules/kafo_configure/lib/puppet/parser/functions/loadanyyaml.rb | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/modules/kafo_configure/lib/puppet/parser/functions/dump_values.rb b/modules/kafo_configure/lib/puppet/parser/functions/dump_values.rb
+index a61459f..33c352d 100644
+--- a/modules/kafo_configure/lib/puppet/parser/functions/dump_values.rb
++++ b/modules/kafo_configure/lib/puppet/parser/functions/dump_values.rb
+@@ -6,7 +6,7 @@ module Puppet::Parser::Functions
+     options<< false if Puppet::PUPPETVERSION.start_with?('2.6')
+     data = args.map do |arg|
+       found_value = lookupvar(arg, *options)
+-      [arg, found_value.nil? ? arg : found_value]
++      [arg, found_value]
+     end
+     data = Hash[data]
+
+diff --git a/modules/kafo_configure/lib/puppet/parser/functions/loadanyyaml.rb b/modules/kafo_configure/lib/puppet/parser/functions/loadanyyaml.rb
+index 462045f..c3df854 100644
+--- a/modules/kafo_configure/lib/puppet/parser/functions/loadanyyaml.rb
++++ b/modules/kafo_configure/lib/puppet/parser/functions/loadanyyaml.rb
+@@ -9,7 +9,7 @@ module Puppet::Parser::Functions
+       if value.is_a?(Hash)
+         data[key] = function_convert([value])
+       else
+-        data[key] = value.nil? ? :undef : value
++        data[key] = value unless value.nil?
+       end
+     end
+
+--
+2.4.3
