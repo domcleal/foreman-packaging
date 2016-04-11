@@ -16,6 +16,7 @@ Source0:    http://downloads.theforeman.org/%{name}/%{name}-%{version}%{?dashalp
 BuildArch:  noarch
 
 Requires:   curl
+Requires:   %{?scl_prefix}puppet >= 3.0.0
 Requires:   %{?scl_prefix}rubygem-kafo >= 0.7.1
 Requires:   %{?scl_prefix}rubygem-apipie-bindings >= 0.0.6
 Requires:   foreman-selinux
