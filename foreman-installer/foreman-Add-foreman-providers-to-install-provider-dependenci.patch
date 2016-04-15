@@ -1,0 +1,121 @@
+From 99ff6eadf2e998dd6fee5d7736cacf85b30e06c5 Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Mon, 4 Apr 2016 11:02:30 +0100
+Subject: [PATCH] Add foreman::providers to install provider dependencies
+
+This will replace the package resource in foreman_proxy and help when
+using the providers here outside of foreman_proxy.
+---
+ manifests/init.pp             |  4 ++++
+ manifests/providers.pp        | 41 +++++++++++++++++++++++++++++++++++++++++
+ manifests/providers/params.pp | 36 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+)
+ create mode 100644 manifests/providers.pp
+ create mode 100644 manifests/providers/params.pp
+
+diff --git a/manifests/init.pp b/manifests/init.pp
+index eb00433..72562b1 100644
+--- a/manifests/init.pp
++++ b/manifests/init.pp
+@@ -339,6 +339,10 @@ class foreman (
+   Package <| tag == 'foreman::cli' |> ~>
+   Class['foreman']
+
++  Class['foreman::repo'] ~>
++  Package <| tag == 'foreman::providers' |> ->
++  Class['foreman']
++
+   # lint:ignore:spaceship_operator_without_tag
+   Class['foreman::database']~>
+   Foreman::Plugin <| |> ~>
+diff --git a/manifests/providers.pp b/manifests/providers.pp
+new file mode 100644
+index 0000000..0a68481
+--- /dev/null
++++ b/manifests/providers.pp
+@@ -0,0 +1,41 @@
++# = foreman_* providers support
++#
++# Installs dependencies to use the foreman_* types and providers.
++#
++# Default parameters should point to the latest packages required for
++# the current version of the providers.
++#
++# === Parameters:
++#
++# $apipie_bindings::          Install apipie-bindings dependency
++#                             type:boolean
++#
++# $apipie_bindings_package::  Name of apipie-bindings package
++#
++# $foreman_api::              Install foreman_api dependency (deprecated)
++#                             type:boolean
++#
++# $foreman_api_package::      Name of foreman_api package
++#
++class foreman::providers(
++  $apipie_bindings         = $::foreman::providers::params::apipie_bindings,
++  $apipie_bindings_package = $::foreman::providers::params::apipie_bindings_package,
++  $foreman_api             = $::foreman::providers::params::foreman_api,
++  $foreman_api_package     = $::foreman::providers::params::foreman_api_package,
++) inherits foreman::providers::params {
++  validate_bool($apipie_bindings, $foreman_api)
++  validate_string($apipie_bindings_package, $foreman_api_package)
++
++  if $apipie_bindings {
++    package { $apipie_bindings_package:
++      ensure => installed,
++    }
++  }
++
++  if $foreman_api {
++    warning('Using foreman_api providers is deprecated, use rest_v2 with apipie-bindings instead')
++    package { $foreman_api_package:
++      ensure => installed,
++    }
++  }
++}
+diff --git a/manifests/providers/params.pp b/manifests/providers/params.pp
+new file mode 100644
+index 0000000..e1f77a1
+--- /dev/null
++++ b/manifests/providers/params.pp
+@@ -0,0 +1,36 @@
++# foreman::providers default parameters
++class foreman::providers::params {
++  # Dependency packages for different providers supplied in this module
++  $apipie_bindings = true
++  $foreman_api = false
++
++  # OS specific package names
++  case $::osfamily {
++    'RedHat': {
++      $apipie_bindings_package = 'rubygem-apipie-bindings'
++      $foreman_api_package = 'rubygem-foreman_api'
++    }
++    'Debian': {
++      $apipie_bindings_package = 'ruby-apipie-bindings'
++      $foreman_api_package = 'ruby-foreman-api'
++    }
++    'FreeBSD': {
++      $apipie_bindings_package = 'rubygem-apipie-bindings'
++      $foreman_api_package = 'rubygem-foreman_api'
++    }
++    'Linux': {
++      case $::operatingsystem {
++        'Amazon': {
++          $apipie_bindings_package = 'rubygem-apipie-bindings'
++          $foreman_api_package = 'rubygem-foreman_api'
++        }
++        default: {
++          fail("${::hostname}: This class does not support operatingsystem ${::operatingsystem}")
++        }
++      }
++    }
++    default: {
++      fail("${::hostname}: This class does not support osfamily ${::osfamily}")
++    }
++  }
++}
+--
+2.4.3
