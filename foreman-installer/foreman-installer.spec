@@ -12,6 +12,8 @@ Group:      Applications/System
 License:    GPLv3+ and ASL 2.0
 URL:        http://theforeman.org
 Source0:    http://downloads.theforeman.org/%{name}/%{name}-%{version}%{?dashalphatag}.tar.bz2
+Patch0:     foreman-fixes-14455-add-rest_v3-smart-proxy-provider-using-O.patch
+Patch1:     foreman-proxy-Use-foreman-providers-to-install-foreman_smartproxy-.patch
 
 BuildArch:  noarch
 
@@ -38,6 +40,8 @@ Complete installer for The Foreman life-cycle management system based on Puppet.
 
 %prep
 %setup -q -n %{name}-%{version}%{?dashalphatag}
+%patch0 -p1 -d modules/foreman/
+%patch1 -p1 -d modules/foreman_proxy/
 
 %build
 #replace shebangs for SCL

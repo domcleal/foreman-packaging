@@ -1,0 +1,343 @@
+From aa5e9c05c43060a4e2224a421952327f5c3fb1fc Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Tue, 12 Apr 2016 13:18:54 +0100
+Subject: [PATCH] fixes #14455 - add rest_v3 smart proxy provider using OAuth
+ gem
+
+The new provider has fewer dependencies than rest_v2 (with
+apipie-bindings), therefore it's easier to package the dependencies for
+an AIO version of Puppet. puppet-agent-oauth will be provided by the
+Foreman repositories to install the oauth gem into the AIO environment.
+
+All Ruby 1.9+ installations, including Puppet AIO packages, won't need
+a JSON package as they include a bundled 'json' library.
+
+The provider's been split into a base type+provider (supported as per
+PUP-2458) to make it easier to add and update other types in future.
+
+The addition of the SSL CA in the type is required with the OAuth gem's
+HTTP request support, as it enables verification by default when it
+detects CA bundles in common locations.
+
+Thanks to @liamjbennett, whose work this is partly based on.
+---
+ lib/puppet/feature/json.rb                        |  3 +
+ lib/puppet/feature/oauth.rb                       |  3 +
+ lib/puppet/provider/foreman_resource/rest_v3.rb   | 96 +++++++++++++++++++++++
+ lib/puppet/provider/foreman_smartproxy/rest_v3.rb | 46 +++++++++++
+ lib/puppet/type/foreman_resource.rb               |  3 +
+ lib/puppet/type/foreman_smartproxy.rb             |  4 +
+ manifests/providers.pp                            | 30 ++++++-
+ manifests/providers/params.pp                     | 24 +++++-
+ 8 files changed, 206 insertions(+), 3 deletions(-)
+ create mode 100644 lib/puppet/feature/json.rb
+ create mode 100644 lib/puppet/feature/oauth.rb
+ create mode 100644 lib/puppet/provider/foreman_resource/rest_v3.rb
+ create mode 100644 lib/puppet/provider/foreman_smartproxy/rest_v3.rb
+ create mode 100644 lib/puppet/type/foreman_resource.rb
+
+diff --git a/lib/puppet/feature/json.rb b/lib/puppet/feature/json.rb
+new file mode 100644
+index 0000000..00c3fe9
+--- /dev/null
++++ b/lib/puppet/feature/json.rb
+@@ -0,0 +1,3 @@
++require 'puppet/util/feature'
++
++Puppet.features.add(:json, :libs => %{json})
+diff --git a/lib/puppet/feature/oauth.rb b/lib/puppet/feature/oauth.rb
+new file mode 100644
+index 0000000..053663a
+--- /dev/null
++++ b/lib/puppet/feature/oauth.rb
+@@ -0,0 +1,3 @@
++require 'puppet/util/feature'
++
++Puppet.features.add(:oauth, :libs => %{oauth})
+diff --git a/lib/puppet/provider/foreman_resource/rest_v3.rb b/lib/puppet/provider/foreman_resource/rest_v3.rb
+new file mode 100644
+index 0000000..91bfde6
+--- /dev/null
++++ b/lib/puppet/provider/foreman_resource/rest_v3.rb
+@@ -0,0 +1,96 @@
++# Base provider for other Puppet types managing Foreman resources
++#
++# This provider uses Net::HTTP from Ruby stdlib, JSON (stdlib on 1.9+ or the
++# gem on 1.8) and the oauth gem for auth, so requiring minimal dependencies.
++
++require 'uri'
++
++Puppet::Type.type(:foreman_resource).provide(:rest_v3) do
++  # when previous providers are installed, use this one
++  def self.specificity
++    super + 2
++  end
++
++  def oauth_consumer_key
++    @oauth_consumer_key ||= begin
++      if resource[:consumer_key]
++        resource[:consumer_key]
++      else
++        begin
++          YAML.load_file('/etc/foreman/settings.yaml')[:oauth_consumer_key]
++        rescue
++          fail "Resource #{resource[:name]} cannot be managed: No OAuth Consumer Key available"
++        end
++      end
++    end
++  end
++
++  def oauth_consumer_secret
++    @oauth_consumer_secret ||= begin
++      if resource[:consumer_secret]
++        resource[:consumer_secret]
++      else
++        begin
++          YAML.load_file('/etc/foreman/settings.yaml')[:oauth_consumer_secret]
++        rescue
++          fail "Resource #{resource[:name]} cannot be managed: No OAuth consumer secret available"
++        end
++      end
++    end
++  end
++
++  def oauth_consumer
++    @consumer ||= OAuth::Consumer.new(oauth_consumer_key, oauth_consumer_secret, {
++      :site               => resource[:base_url],
++      :request_token_path => '',
++      :authorize_path     => '',
++      :access_token_path  => '',
++      :timeout            => resource[:timeout],
++      :ca_file            => resource[:ssl_ca]
++    })
++  end
++
++  def generate_token
++    OAuth::AccessToken.new(oauth_consumer)
++  end
++
++  def request(method, path, params = {}, data = nil, headers = {})
++    base_url = resource[:base_url]
++    base_url += '/' unless base_url.end_with?('/')
++
++    uri = URI.join(base_url, path)
++    uri.query = params.map { |p,v| "#{URI.escape(p.to_s)}=#{URI.escape(v.to_s)}" }.join('&') unless params.empty?
++
++    headers = {
++      'Accept' => 'application/json',
++      'Content-Type' => 'application/json',
++      'foreman_user' => resource[:effective_user]
++    }.merge(headers)
++
++    attempts = 0
++    begin
++      debug("Making #{method} request to #{uri}")
++      response = oauth_consumer.request(method, uri.to_s, generate_token, {}, data, headers)
++      debug("Received response #{response.code} from request to #{uri}")
++      response
++    rescue Timeout::Error => te
++      attempts = attempts + 1
++      if attempts < 5
++        warning("Timeout calling API at #{uri}. Retrying ..")
++        retry
++      else
++        raise Puppet::Error.new("Timeout calling API at #{uri}", te)
++      end
++    rescue Exception => ex
++      raise Puppet::Error.new("Exception #{ex} in #{method} request to: #{uri}", ex)
++    end
++  end
++
++  def success?(response)
++    (200..299).include?(response.code.to_i)
++  end
++
++  def error_message(response)
++    JSON.parse(response.body)['error']['full_messages'].join(' ') rescue "unknown error (response #{response.code})"
++  end
++end
+diff --git a/lib/puppet/provider/foreman_smartproxy/rest_v3.rb b/lib/puppet/provider/foreman_smartproxy/rest_v3.rb
+new file mode 100644
+index 0000000..510c4f1
+--- /dev/null
++++ b/lib/puppet/provider/foreman_smartproxy/rest_v3.rb
+@@ -0,0 +1,46 @@
++Puppet::Type.type(:foreman_smartproxy).provide(:rest_v3, :parent => Puppet::Type.type(:foreman_resource).provider(:rest_v3)) do
++  confine :feature => [:json, :oauth]
++
++  def proxy
++    @proxy ||= begin
++      r = request(:get, 'api/v2/smart_proxies', :search => %{name="#{resource[:name]}"})
++      raise Puppet::Error.new("Proxy #{resource[:name]} cannot be retrieved: #{error_message(r)}") unless success?(r)
++      JSON.load(r.body)['results'][0]
++    end
++  end
++
++  def id
++    proxy ? proxy['id'] : nil
++  end
++
++  def exists?
++    !id.nil?
++  end
++
++  def create
++    post_data = {:smart_proxy => {:name => resource[:name], :url => resource[:url]}}.to_json
++    r = request(:post, 'api/v2/smart_proxies', {}, post_data)
++    raise Puppet::Error.new("Proxy #{resource[:name]} cannot be registered: #{error_message(r)}") unless success?(r)
++  end
++
++  def destroy
++    r = request(:delete, "api/v2/smart_proxies/#{id}")
++    raise Puppet::Error.new("Proxy #{resource[:name]} cannot be removed: #{error_message(r)}") unless success?(r)
++    @proxy = nil
++  end
++
++  def url
++    proxy ? proxy['url'] : nil
++  end
++
++  def url=(value)
++    post_data = {:smart_proxy => {:url => value}}.to_json
++    r = request(:put, "api/v2/smart_proxies/#{id}", {}, post_data)
++    raise Puppet::Error.new("Proxy #{resource[:name]} cannot be updated: #{error_message(r)}") unless success?(r)
++  end
++
++  def refresh_features!
++    r = request(:put, "api/v2/smart_proxies/#{id}/refresh")
++    raise Puppet::Error.new("Proxy #{resource[:name]} cannot be refreshed: #{error_message(r)}") unless success?(r)
++  end
++end
+diff --git a/lib/puppet/type/foreman_resource.rb b/lib/puppet/type/foreman_resource.rb
+new file mode 100644
+index 0000000..4bd3e93
+--- /dev/null
++++ b/lib/puppet/type/foreman_resource.rb
+@@ -0,0 +1,3 @@
++Puppet::Type.newtype(:foreman_resource) do
++  desc 'Abstract type for Foreman resources.'
++end
+diff --git a/lib/puppet/type/foreman_smartproxy.rb b/lib/puppet/type/foreman_smartproxy.rb
+index c39708f..f06cffc 100644
+--- a/lib/puppet/type/foreman_smartproxy.rb
++++ b/lib/puppet/type/foreman_smartproxy.rb
+@@ -23,6 +23,10 @@ Puppet::Type.newtype(:foreman_smartproxy) do
+     desc 'Foreman oauth consumer_secret'
+   end
+
++  newparam(:ssl_ca) do
++    desc 'Foreman SSL CA (certificate authority) for verification'
++  end
++
+   newproperty(:url) do
+     desc 'The url of the smartproxy'
+     isrequired
+diff --git a/manifests/providers.pp b/manifests/providers.pp
+index 0a68481..d4726f9 100644
+--- a/manifests/providers.pp
++++ b/manifests/providers.pp
+@@ -7,6 +7,16 @@
+ #
+ # === Parameters:
+ #
++# $oauth::                    Install oauth dependency
++#                             type:boolean
++#
++# $oauth_package::            Name of oauth package
++#
++# $json::                     Install json dependency, not required on Ruby 1.9 or higher
++#                             type:boolean
++#
++# $json_package::             Name of json package
++#
+ # $apipie_bindings::          Install apipie-bindings dependency
+ #                             type:boolean
+ #
+@@ -18,13 +28,29 @@
+ # $foreman_api_package::      Name of foreman_api package
+ #
+ class foreman::providers(
++  $oauth                   = $::foreman::providers::params::oauth,
++  $oauth_package           = $::foreman::providers::params::oauth_package,
++  $json                    = $::foreman::providers::params::json,
++  $json_package            = $::foreman::providers::params::json_package,
+   $apipie_bindings         = $::foreman::providers::params::apipie_bindings,
+   $apipie_bindings_package = $::foreman::providers::params::apipie_bindings_package,
+   $foreman_api             = $::foreman::providers::params::foreman_api,
+   $foreman_api_package     = $::foreman::providers::params::foreman_api_package,
+ ) inherits foreman::providers::params {
+-  validate_bool($apipie_bindings, $foreman_api)
+-  validate_string($apipie_bindings_package, $foreman_api_package)
++  validate_bool($oauth, $json, $apipie_bindings, $foreman_api)
++  validate_string($oauth_package, $json_package, $apipie_bindings_package, $foreman_api_package)
++
++  if $oauth {
++    package { $oauth_package:
++      ensure => installed,
++    }
++  }
++
++  if $json {
++    package { $json_package:
++      ensure => installed,
++    }
++  }
+
+   if $apipie_bindings {
+     package { $apipie_bindings_package:
+diff --git a/manifests/providers/params.pp b/manifests/providers/params.pp
+index e1f77a1..3b7faf2 100644
+--- a/manifests/providers/params.pp
++++ b/manifests/providers/params.pp
+@@ -1,26 +1,48 @@
+ # foreman::providers default parameters
+ class foreman::providers::params {
+   # Dependency packages for different providers supplied in this module
+-  $apipie_bindings = true
++  $oauth = true
++  $json = (versioncmp($::rubyversion, '1.9') < 0)
++  $apipie_bindings = false
+   $foreman_api = false
+
+   # OS specific package names
+   case $::osfamily {
+     'RedHat': {
++      if versioncmp($::puppetversion, '4.0') >= 0 {
++        $oauth_package = 'puppet-agent-oauth'
++      } else {
++        $oauth_package = 'rubygem-oauth'
++      }
++      $json_package = 'rubygem-json'
+       $apipie_bindings_package = 'rubygem-apipie-bindings'
+       $foreman_api_package = 'rubygem-foreman_api'
+     }
+     'Debian': {
++      if versioncmp($::puppetversion, '4.0') >= 0 {
++        $oauth_package = 'puppet-agent-oauth'
++      } else {
++        $oauth_package = 'ruby-oauth'
++      }
++      $json_package = 'ruby-json'
+       $apipie_bindings_package = 'ruby-apipie-bindings'
+       $foreman_api_package = 'ruby-foreman-api'
+     }
+     'FreeBSD': {
++      $oauth_package = 'rubygem-oauth'
++      $json_package = 'rubygem-json'
+       $apipie_bindings_package = 'rubygem-apipie-bindings'
+       $foreman_api_package = 'rubygem-foreman_api'
+     }
+     'Linux': {
+       case $::operatingsystem {
+         'Amazon': {
++          if versioncmp($::puppetversion, '4.0') >= 0 {
++            $oauth_package = 'puppet-agent-oauth'
++          } else {
++            $oauth_package = 'rubygem-oauth'
++          }
++          $json_package = 'rubygem-json'
+           $apipie_bindings_package = 'rubygem-apipie-bindings'
+           $foreman_api_package = 'rubygem-foreman_api'
+         }
+--
+2.4.3

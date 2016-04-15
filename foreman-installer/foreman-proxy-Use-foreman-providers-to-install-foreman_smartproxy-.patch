@@ -1,0 +1,57 @@
+From ae19a6eb44d28c5cf7fa2e450594432c9cf9dfa9 Mon Sep 17 00:00:00 2001
+From: Dominic Cleal <dominic@cleal.org>
+Date: Mon, 4 Apr 2016 11:55:58 +0100
+Subject: [PATCH] Use foreman::providers to install foreman_smartproxy deps
+
+---
+ manifests/install.pp | 6 ++----
+ manifests/params.pp  | 3 ---
+ 2 files changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/manifests/install.pp b/manifests/install.pp
+index 7ad0a9c..09ef583 100644
+--- a/manifests/install.pp
++++ b/manifests/install.pp
+@@ -18,10 +18,8 @@ class foreman_proxy::install {
+   }
+
+   if $foreman_proxy::register_in_foreman {
+-    package { $foreman_proxy::params::foreman_api_package:
+-      ensure  => present,
+-      require => $repo,
+-    }
++    include ::foreman::providers
++    $repo -> Class['foreman::providers'] -> anchor { 'foreman_proxy::install_end': }
+   }
+
+   if $foreman_proxy::bmc and $foreman_proxy::bmc_default_provider != 'shell' {
+diff --git a/manifests/params.pp b/manifests/params.pp
+index 2e46f60..f2eaf3d 100644
+--- a/manifests/params.pp
++++ b/manifests/params.pp
+@@ -12,7 +12,6 @@ class foreman_proxy::params {
+       # set it to some custom location.
+       $custom_repo         = false
+       $plugin_prefix       = 'rubygem-smart_proxy_'
+-      $foreman_api_package = 'rubygem-apipie-bindings'
+
+       $dir     = '/usr/share/foreman-proxy'
+       $etc     = '/etc'
+@@ -38,7 +37,6 @@ class foreman_proxy::params {
+       # set it to some custom location.
+       $custom_repo         = false
+       $plugin_prefix       = 'ruby-smart-proxy-'
+-      $foreman_api_package = 'ruby-apipie-bindings'
+
+       $dir   = '/usr/share/foreman-proxy'
+       $etc   = '/etc'
+@@ -75,7 +73,6 @@ class foreman_proxy::params {
+       # set it to some custom location.
+       $custom_repo         = true # as foreman packages are in standard FreeBSD ports
+       $plugin_prefix       = 'rubygem-smart_proxy_'
+-      $foreman_api_package = 'rubygem-apipie-bindings'
+
+       $dir   = '/usr/local/share/foreman-proxy'
+       $etc   = '/usr/local/etc'
+--
+2.4.3
