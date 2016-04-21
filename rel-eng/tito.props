@@ -117,8 +117,8 @@ whitelist = foreman-installer
   rubygem-sinatra
   rubygem-tilt
 
-[foreman-nightly-fedora21]
-disttag = .fc21
+[foreman-nightly-fedora24]
+disttag = .fc24
 whitelist = foreman
   foreman-installer
   foreman-proxy
@@ -371,8 +371,8 @@ whitelist = rubygem-algebrick
   rubygem-smart_proxy_remote_execution_ssh
   rubygem-smart_proxy_salt
 
-[foreman-plugins-nightly-fedora21]
-disttag = .fc21
+[foreman-plugins-nightly-fedora24]
+disttag = .fc24
 whitelist = rubygem-algebrick
   rubygem-angular-rails-templates
   rubygem-apipie-params
