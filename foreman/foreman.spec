@@ -56,7 +56,7 @@ Requires: %{name}-debug
 Requires: %{?scl_prefix_ror}rubygem(rails) >= 4.2.5.1
 Requires: %{?scl_prefix_ror}rubygem(rails) < 4.2.7
 Requires: %{?scl_prefix}rubygem(rest-client) >= 1.6
-Requires: %{?scl_prefix}rubygem(rest-client) < 1.7
+Requires: %{?scl_prefix}rubygem(rest-client) < 2.0
 Requires: %{?scl_prefix}rubygem(audited-activerecord) >= 4.0
 Requires: %{?scl_prefix}rubygem(audited-activerecord) < 5.0
 Requires: %{?scl_prefix}rubygem(will_paginate) >= 3.0
@@ -131,7 +131,7 @@ BuildRequires: %{?scl_prefix_ror}rubygem(sqlite3)
 BuildRequires: %{?scl_prefix_ror}rubygem(rails) >= 4.2.5.1
 BuildRequires: %{?scl_prefix_ror}rubygem(rails) < 4.2.7
 BuildRequires: %{?scl_prefix}rubygem(rest-client) >= 1.6
-BuildRequires: %{?scl_prefix}rubygem(rest-client) < 1.7
+BuildRequires: %{?scl_prefix}rubygem(rest-client) < 2.0
 BuildRequires: %{?scl_prefix}rubygem(audited-activerecord) >= 4.0
 BuildRequires: %{?scl_prefix}rubygem(audited-activerecord) < 5.0
 BuildRequires: %{?scl_prefix}rubygem(will_paginate) >= 3.0
