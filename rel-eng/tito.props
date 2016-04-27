@@ -29,6 +29,7 @@ blacklist = foreman-installer
   rubygem-rkerberos
   rubygem-rubyipmi
   rubygem-sinatra
+  rubygem-sprockets-rails
   rubygem-tilt
 scl = tfm
 
@@ -47,6 +48,7 @@ blacklist = foreman-installer
   rubygem-rkerberos
   rubygem-rubyipmi
   rubygem-sinatra
+  rubygem-sprockets-rails
   rubygem-tilt
 scl = tfm
 
@@ -179,6 +181,7 @@ whitelist = foreman
   rubygem-select2-rails
   rubygem-signet
   rubygem-spice-html5-rails
+  rubygem-sprockets-rails
   rubygem-strong_parameters
   rubygem-table_print
   rubygem-therubyracer
