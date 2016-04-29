@@ -6,12 +6,13 @@
 
 Summary: Load system gems via Bundler DSL
 Name: %{?scl_prefix}rubygem-%{gem_name}
-Version: 0.3.0
-Release: 9%{?dist}
+Version: 0.4.0
+Release: 4%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: https://github.com/aeolus-incubator/bundler_ext
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
+Patch0: 18.patch
 %if 0%{?el6} && 0%{!?scl:1}
 Requires: %{?scl_prefix_ruby}ruby(abi)
 %else
@@ -50,13 +51,13 @@ Documentation for %{pkg_name}
 
 %prep
 %setup -n %{pkg_name}-%{version} -q -c -T
-mkdir -p .%{gem_dir}
-%{?scl:scl enable %{scl} "}
-gem install --local --install-dir .%{gem_dir} \
-            --force %{SOURCE0}
-%{?scl:"}
+%{?scl:scl enable %{scl} - <<EOF}
+%gem_install -n %{SOURCE0}
+%{?scl:EOF}
 
 %build
+cd .%{gem_instdir}
+patch -p1 < %{PATCH0}
 
 %install
 mkdir -p %{buildroot}%{gem_dir}
