@@ -32,6 +32,7 @@
 
       <packagereq type="default">foreman-installer</packagereq>
       <packagereq type="default">puppet-agent-oauth</packagereq>
+      <packagereq type="default">puppet-agent-yard</packagereq>
       <packagereq type="default">rubygem-foreman_api</packagereq>
 
       <packagereq type="default">rubygem-ace-rails-ap</packagereq>
