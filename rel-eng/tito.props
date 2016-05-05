@@ -21,6 +21,7 @@ blacklist = foreman-installer
   foreman-release-scl
   foreman-selinux
   puppet-agent-oauth
+  puppet-agent-puppet-strings
   puppet-agent-yard
   rubygem-kafo
   rubygem-kafo_parsers
@@ -40,6 +41,7 @@ blacklist = foreman-installer
   foreman-release-scl
   foreman-selinux
   puppet-agent-oauth
+  puppet-agent-puppet-strings
   puppet-agent-yard
   rubygem-kafo
   rubygem-kafo_parsers
@@ -63,6 +65,7 @@ whitelist = foreman-installer
   foreman-release-scl
   foreman-selinux
   puppet-agent-oauth
+  puppet-agent-puppet-strings
   puppet-agent-yard
   rubygem-apipie-bindings
   rubygem-awesome_print
