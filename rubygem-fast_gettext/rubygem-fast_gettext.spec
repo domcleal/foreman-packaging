@@ -3,7 +3,7 @@
 
 %global gem_name fast_gettext
 
-Summary: A simple, fast, memory-efficient and threadsafe implementation of GetText
+Summary: A simple, fast, memory-efficient and threadsafe implementation of GetText test
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 1.0.0
 Release: 1%{?dist}
