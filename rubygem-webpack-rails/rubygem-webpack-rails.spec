@@ -12,8 +12,8 @@ License: MIT
 URL: http://github.com/mipearson/webpack-rails
 Source0: http://rubygems.org/gems/%{gem_name}-%{version}.gem
 Requires: %{?scl_prefix_ruby}ruby(release)
-Requires: %{?scl_prefix_ruby}ruby >= 2.0.0
 Requires: %{?scl_prefix_ruby}ruby(rubygems)
+Requires: %{?scl_prefix_ruby}ruby
 Requires: %{?scl_prefix_ror}rubygem(rails) >= 3.2.0
 BuildRequires: %{?scl_prefix_ruby}ruby(release)
 BuildRequires: %{?scl_prefix_ruby}ruby >= 2.0.0
