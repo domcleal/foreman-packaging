@@ -10,8 +10,8 @@
 %{!?scl_prefix_ror:%global scl_prefix_ror %{scl_ror}-}
 %{!?scl_ruby:%global scl_ruby rh-ruby22}
 %{!?scl_prefix_ruby:%global scl_prefix_ruby %{scl_ruby}-}
-%{!?scl_v8:%global scl_v8 v8314}
-%{!?scl_prefix_v8:%global scl_prefix_v8 %{scl_v8}-}
+%{!?scl_nodejs:%global scl_nodejs rh-nodejs4}
+%{!?scl_prefix_nodejs:%global scl_prefix_nodejs %{scl_nodejs}-}
 
 # Do not produce empty debuginfo package.
 %global debug_package %{nil}
@@ -20,8 +20,8 @@
 
 Summary: Package that installs %scl
 Name: %scl_name
-Version: 3.1
-Release: 3%{?dist}
+Version: 4.0
+Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -34,14 +34,14 @@ Requires: %{scl_runtime}-assets
 %if 0%{?install_scl}
 Requires: %{scl_ror}
 Requires: %{scl_ruby}
-Requires: %{scl_v8}
+Requires: %{scl_nodejs}
 %endif
 BuildRequires: scl-utils-build help2man
 BuildRequires: %{scl_prefix_ror}scldevel
 BuildRequires: %{scl_prefix_ror}runtime
 BuildRequires: %{scl_prefix_ruby}scldevel
 BuildRequires: %{scl_prefix_ruby}rubygems-devel
-BuildRequires: %{scl_prefix_v8}scldevel
+BuildRequires: %{scl_prefix_nodejs}scldevel
 
 %description
 This is the main package for %scl Software Collection.
@@ -89,7 +89,7 @@ Provides dependencies for Foreman (http://theforeman.org/).
 Summary: Package that adds asset compilation for %scl Software Collection.
 Group: Applications/File
 Requires: %{scl_prefix}runtime
-Requires: %{scl_prefix_v8}runtime
+Requires: %{scl_prefix_nodejs}runtime
 
 %description runtime-assets
 Package shipping additional scripts to work with %scl Software Collection.
@@ -105,7 +105,7 @@ Requires: %{scl_runtime}
 Requires: %{scl_runtime}-assets
 Requires: %{scl_prefix_ror}scldevel
 Requires: %{scl_prefix_ruby}scldevel
-Requires: %{scl_prefix_v8}scldevel
+Requires: %{scl_prefix_nodejs}scldevel
 
 %description build
 Package shipping essential configuration macros to build %scl Software Collection.
@@ -165,7 +165,7 @@ EOF
 # enable asset compilation collections optionally, only if -runtime-assets is
 # installed, to reduce deps for -runtime
 cat >> %{buildroot}%{_scl_scripts}/enable_assets << EOF
-. scl_source enable %{scl_v8}
+. scl_source enable %{scl_nodejs}
 EOF
 
 # additional rpm macros for builds in the collection to set the vendor correctly
