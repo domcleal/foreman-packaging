@@ -9,7 +9,6 @@
     <uservisible>true</uservisible>
     <packagelist>
       <packagereq type="default">foreman</packagereq>
-      <packagereq type="default">foreman-assets</packagereq>
       <packagereq type="default">foreman-cli</packagereq>
       <packagereq type="default">foreman-compute</packagereq>
       <packagereq type="default">foreman-console</packagereq>
@@ -42,9 +41,26 @@
 
       <packagereq type="default">tfm-mod_passenger</packagereq>
 
-      <packagereq type="default">nodejs-jquery.cookie</packagereq>
-
+      <!-- Assets dependencies -->
+      <packagereq type="default">foreman-assets</packagereq>
       <packagereq type="default">tfm-rubygem-ace-rails-ap</packagereq>
+      <packagereq type="default">tfm-rubygem-autoprefixer-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-bootstrap-sass</packagereq>
+      <packagereq type="default">tfm-rubygem-flot-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-font-awesome-sass</packagereq>
+      <packagereq type="default">tfm-rubygem-gettext_i18n_rails_js</packagereq>
+      <packagereq type="default">tfm-rubygem-gridster-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-jquery_pwstrength_bootstrap_4</packagereq>
+      <packagereq type="default">tfm-rubygem-jquery-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-jquery-turbolinks</packagereq>
+      <packagereq type="default">tfm-rubygem-jquery-ui-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-multi-select-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-patternfly-sass</packagereq>
+      <packagereq type="default">tfm-rubygem-quiet_assets</packagereq>
+      <packagereq type="default">tfm-rubygem-select2-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-spice-html5-rails</packagereq>
+      <packagereq type="default">tfm-rubygem-underscore-rails</packagereq>
+
       <packagereq type="default">tfm-rubygem-activerecord-session_store</packagereq>
       <packagereq type="default">tfm-rubygem-addressable</packagereq>
       <packagereq type="default">tfm-rubygem-ancestry</packagereq>
@@ -53,9 +69,7 @@
       <packagereq type="default">tfm-rubygem-audited-activerecord</packagereq>
       <packagereq type="default">tfm-rubygem-audited</packagereq>
       <packagereq type="default">tfm-rubygem-autoparse</packagereq>
-      <packagereq type="default">tfm-rubygem-autoprefixer-rails</packagereq>
       <packagereq type="default">tfm-rubygem-awesome_print</packagereq>
-      <packagereq type="default">tfm-rubygem-bootstrap-sass</packagereq>
       <packagereq type="default">tfm-rubygem-bundler_ext</packagereq>
       <packagereq type="default">tfm-rubygem-clamp</packagereq>
       <packagereq type="default">tfm-rubygem-css_parser</packagereq>
@@ -68,7 +82,6 @@
       <packagereq type="default">tfm-rubygem-facter</packagereq>
       <packagereq type="default">tfm-rubygem-faraday</packagereq>
       <packagereq type="default">tfm-rubygem-fast_gettext</packagereq>
-      <packagereq type="default">tfm-rubygem-flot-rails</packagereq>
       <packagereq type="default">tfm-rubygem-fog</packagereq>
       <packagereq type="default">tfm-rubygem-fog-aws</packagereq>
       <packagereq type="default">tfm-rubygem-fog-core</packagereq>
@@ -80,14 +93,11 @@
       <packagereq type="default">tfm-rubygem-fog-vsphere</packagereq>
       <packagereq type="default">tfm-rubygem-fog-xenserver</packagereq>
       <packagereq type="default">tfm-rubygem-fog-xml</packagereq>
-      <packagereq type="default">tfm-rubygem-font-awesome-sass</packagereq>
       <packagereq type="default">tfm-rubygem-formatador</packagereq>
       <packagereq type="default">tfm-rubygem-friendly_id</packagereq>
       <packagereq type="default">tfm-rubygem-gettext</packagereq>
       <packagereq type="default">tfm-rubygem-gettext_i18n_rails</packagereq>
-      <packagereq type="default">tfm-rubygem-gettext_i18n_rails_js</packagereq>
       <packagereq type="default">tfm-rubygem-google-api-client</packagereq>
-      <packagereq type="default">tfm-rubygem-gridster-rails</packagereq>
       <packagereq type="default">tfm-rubygem-hammer_cli</packagereq>
       <packagereq type="default">tfm-rubygem-hammer_cli_foreman</packagereq>
       <packagereq type="default">tfm-rubygem-hashie</packagereq>
@@ -109,7 +119,6 @@
       <packagereq type="default">tfm-rubygem-locale</packagereq>
       <packagereq type="default">tfm-rubygem-logging</packagereq>
       <packagereq type="default">tfm-rubygem-multipart-post</packagereq>
-      <packagereq type="default">tfm-rubygem-multi-select-rails</packagereq>
       <packagereq type="default">tfm-rubygem-mysql2</packagereq>
       <packagereq type="default">tfm-rubygem-netrc</packagereq>
       <packagereq type="default">tfm-rubygem-net-ldap</packagereq>
@@ -120,12 +129,10 @@
       <packagereq type="default">tfm-rubygem-passenger-native-libs</packagereq>
       <packagereq type="default">tfm-rubygem-passenger-native</packagereq>
       <packagereq type="default">tfm-rubygem-passenger</packagereq>
-      <packagereq type="default">tfm-rubygem-patternfly-sass</packagereq>
       <packagereq type="default">tfm-rubygem-pg</packagereq>
       <packagereq type="default">tfm-rubygem-po_to_json</packagereq>
       <packagereq type="default">tfm-rubygem-powerbar</packagereq>
       <packagereq type="default">tfm-rubygem-protected_attributes</packagereq>
-      <packagereq type="default">tfm-rubygem-quiet_assets</packagereq>
       <packagereq type="default">tfm-rubygem-rabl</packagereq>
       <packagereq type="default">tfm-rubygem-rack-jsonp</packagereq>
       <packagereq type="default">tfm-rubygem-rails-i18n</packagereq>
@@ -144,17 +151,14 @@
       <packagereq type="default">tfm-rubygem-safemode</packagereq>
       <packagereq type="default">tfm-rubygem-scoped_search</packagereq>
       <packagereq type="default">tfm-rubygem-secure_headers</packagereq>
-      <packagereq type="default">tfm-rubygem-select2-rails</packagereq>
       <packagereq type="default">tfm-rubygem-sequel</packagereq>
       <packagereq type="default">tfm-rubygem-sexp_processor</packagereq>
       <packagereq type="default">tfm-rubygem-signet</packagereq>
-      <packagereq type="default">tfm-rubygem-spice-html5-rails</packagereq>
       <packagereq type="default">tfm-rubygem-sshkey</packagereq>
       <packagereq type="default">tfm-rubygem-syntax</packagereq>
       <packagereq type="default">tfm-rubygem-table_print</packagereq>
       <packagereq type="default">tfm-rubygem-text</packagereq>
       <packagereq type="default">tfm-rubygem-trollop</packagereq>
-      <packagereq type="default">tfm-rubygem-underscore-rails</packagereq>
       <packagereq type="default">tfm-rubygem-unf</packagereq>
       <packagereq type="default">tfm-rubygem-unf_ext</packagereq>
       <packagereq type="default">tfm-rubygem-unicode-display_width</packagereq>
@@ -178,6 +182,8 @@
       <packagereq type="default">nodejs-lodash</packagereq>
       <packagereq type="default">nodejs-jstz</packagereq>
       <packagereq type="default">nodejs-jquery-ujs</packagereq>
+      <packagereq type="default">nodejs-jquery</packagereq>
+      <packagereq type="default">nodejs-jquery.cookie</packagereq>
       <packagereq type="default">puppet-agent-oauth</packagereq>
       <packagereq type="default">rubygem-apipie-bindings</packagereq>
       <packagereq type="default">rubygem-bundler_ext</packagereq>

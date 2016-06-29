@@ -9,7 +9,6 @@
     <uservisible>true</uservisible>
     <packagelist>
       <packagereq type="default">foreman</packagereq>
-      <packagereq type="default">foreman-assets</packagereq>
       <packagereq type="default">foreman-cli</packagereq>
       <packagereq type="default">foreman-compute</packagereq>
       <packagereq type="default">foreman-console</packagereq>
@@ -30,27 +29,45 @@
       <packagereq type="default">foreman-sqlite</packagereq>
       <packagereq type="default">foreman-vmware</packagereq>
 
-      <packagereq type="default">foreman-installer</packagereq>
-      <packagereq type="default">rubygem-puppet-strings</packagereq>
-
+      <!-- Assets dependencies -->
+      <packagereq type="default">foreman-assets</packagereq>
+      <packagereq type="default">nodejs-jquery</packagereq>
       <packagereq type="default">nodejs-select2</packagereq>
       <packagereq type="default">nodejs-lodash</packagereq>
       <packagereq type="default">nodejs-jstz</packagereq>
       <packagereq type="default">nodejs-jquery.cookie</packagereq>
       <packagereq type="default">nodejs-jquery-ujs</packagereq>
-
       <packagereq type="default">rubygem-ace-rails-ap</packagereq>
+      <packagereq type="default">rubygem-autoprefixer-rails</packagereq>
+      <packagereq type="default">rubygem-bootstrap-sass</packagereq>
+      <packagereq type="default">rubygem-flot-rails</packagereq>
+      <packagereq type="default">rubygem-font-awesome-sass</packagereq>
+      <packagereq type="default">rubygem-gettext_i18n_rails_js</packagereq>
+      <packagereq type="default">rubygem-gridster-rails</packagereq>
+      <packagereq type="default">rubygem-jquery_pwstrength_bootstrap_4</packagereq>
+      <packagereq type="default">rubygem-jquery-rails</packagereq>
+      <packagereq type="default">rubygem-jquery-turbolinks</packagereq>
+      <packagereq type="default">rubygem-jquery-ui-rails</packagereq>
+      <packagereq type="default">rubygem-multi-select-rails</packagereq>
+      <packagereq type="default">rubygem-patternfly-sass</packagereq>
+      <packagereq type="default">rubygem-quiet_assets</packagereq>
+      <packagereq type="default">rubygem-select2-rails</packagereq>
+      <packagereq type="default">rubygem-spice-html5-rails</packagereq>
+      <packagereq type="default">rubygem-sprockets-rails</packagereq>
+      <packagereq type="default">rubygem-underscore-rails</packagereq>
+
+      <!-- Installer dependencies -->
+      <packagereq type="default">foreman-installer</packagereq>
+      <packagereq type="default">rubygem-puppet-strings</packagereq>
+
       <packagereq type="default">rubygem-activerecord-session_store</packagereq>
       <packagereq type="default">rubygem-apipie-bindings</packagereq>
       <packagereq type="default">rubygem-autoparse</packagereq>
-      <packagereq type="default">rubygem-autoprefixer-rails</packagereq>
-      <packagereq type="default">rubygem-bootstrap-sass</packagereq>
       <packagereq type="default">rubygem-clamp</packagereq>
       <packagereq type="default">rubygem-css_parser</packagereq>
       <packagereq type="default">rubygem-deep_cloneable</packagereq>
       <packagereq type="default">rubygem-excon</packagereq>
       <packagereq type="default">rubygem-extlib</packagereq>
-      <packagereq type="default">rubygem-flot-rails</packagereq>
       <packagereq type="default">rubygem-fog</packagereq>
       <packagereq type="default">rubygem-fog-aws</packagereq>
       <packagereq type="default">rubygem-fog-core</packagereq>
@@ -59,11 +76,8 @@
       <packagereq type="default">rubygem-fog-rackspace</packagereq>
       <packagereq type="default">rubygem-fog-vsphere</packagereq>
       <packagereq type="default">rubygem-fog-xenserver</packagereq>
-      <packagereq type="default">rubygem-font-awesome-sass</packagereq>
       <packagereq type="default">rubygem-friendly_id</packagereq>
-      <packagereq type="default">rubygem-gettext_i18n_rails_js</packagereq>
       <packagereq type="default">rubygem-google-api-client</packagereq>
-      <packagereq type="default">rubygem-gridster-rails</packagereq>
       <packagereq type="default">rubygem-hammer_cli</packagereq>
       <packagereq type="default">rubygem-hammer_cli_foreman</packagereq>
       <packagereq type="default">rubygem-hirb-unicode-steakknife</packagereq>
@@ -78,12 +92,9 @@
       <packagereq type="default">rubygem-kafo_parsers</packagereq>
       <packagereq type="default">rubygem-kafo_wizards</packagereq>
       <packagereq type="default">rubygem-launchy</packagereq>
-      <packagereq type="default">rubygem-multi-select-rails</packagereq>
-      <packagereq type="default">rubygem-patternfly-sass</packagereq>
       <packagereq type="default">rubygem-po_to_json</packagereq>
       <packagereq type="default">rubygem-powerbar</packagereq>
       <packagereq type="default">rubygem-protected_attributes</packagereq>
-      <packagereq type="default">rubygem-quiet_assets</packagereq>
       <packagereq type="default">rubygem-rack-jsonp</packagereq>
       <packagereq type="default">rubygem-rails-i18n</packagereq>
       <packagereq type="default">rubygem-rbovirt</packagereq>
@@ -93,12 +104,8 @@
       <packagereq type="default">rubygem-rubyipmi</packagereq>
       <packagereq type="default">rubygem-safemode</packagereq>
       <packagereq type="default">rubygem-secure_headers</packagereq>
-      <packagereq type="default">rubygem-select2-rails</packagereq>
       <packagereq type="default">rubygem-signet</packagereq>
-      <packagereq type="default">rubygem-spice-html5-rails</packagereq>
-      <packagereq type="default">rubygem-sprockets-rails</packagereq>
       <packagereq type="default">rubygem-table_print</packagereq>
-      <packagereq type="default">rubygem-underscore-rails</packagereq>
       <packagereq type="default">rubygem-validates_lengths_from_database</packagereq>
       <packagereq type="default">rubygem-webpack-rails</packagereq>
       <packagereq type="default">rubygem-x-editable-rails</packagereq>
