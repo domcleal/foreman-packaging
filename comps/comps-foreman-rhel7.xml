@@ -42,6 +42,8 @@
 
       <packagereq type="default">tfm-mod_passenger</packagereq>
 
+      <packagereq type="default">nodejs-jquery.cookie</packagereq>
+
       <packagereq type="default">tfm-rubygem-ace-rails-ap</packagereq>
       <packagereq type="default">tfm-rubygem-activerecord-session_store</packagereq>
       <packagereq type="default">tfm-rubygem-addressable</packagereq>
