@@ -25,6 +25,7 @@ whitelist = foreman-installer
   nodejs-jquery.cookie
   nodejs-jquery-ujs
   nodejs-jquery
+  nodejs-webpack
   puppet-agent-oauth
   rubygem-apipie-bindings
   rubygem-bundler_ext
@@ -61,6 +62,7 @@ whitelist = foreman-installer
   nodejs-jquery.cookie
   nodejs-jquery-ujs
   nodejs-jquery
+  nodejs-webpack
   puppet-agent-oauth
   rubygem-apipie-bindings
   rubygem-bundler_ext
@@ -341,6 +343,7 @@ whitelist = foreman
   nodejs-jquery.cookie
   nodejs-jquery-ujs
   nodejs-jquery
+  nodejs-webpack
   puppet-agent-oauth
   rubygem-ace-rails-ap
   rubygem-activerecord-session_store
