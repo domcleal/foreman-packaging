@@ -226,7 +226,7 @@ done
 %setup -T -q -a 93 -D -n npm_cache
 
 %build
-npm install --registry http://localhost --cache-min 9999999 --cache . babel-preset-es2015
+npm install --cache-min 9999999 --cache . babel-preset-es2015
 
 %install
 mkdir -p %{buildroot}%{nodejs_sitelib}/%{npm_name}
