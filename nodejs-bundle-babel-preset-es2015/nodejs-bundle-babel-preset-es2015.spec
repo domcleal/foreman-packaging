@@ -34,7 +34,7 @@ Source23: http://registry.npmjs.org/babel-helper-replace-supers/-/babel-helper-r
 Source24: http://registry.npmjs.org/babel-types/-/babel-types-6.11.1.tgz
 Source25: http://registry.npmjs.org/babel-plugin-transform-regenerator/-/babel-plugin-transform-regenerator-6.11.4.tgz
 Source26: http://registry.npmjs.org/babel-helper-optimise-call-expression/-/babel-helper-optimise-call-expression-6.8.0.tgz
-Source27: http://registry.npmjs.org/babel-traverse/-/babel-traverse-6.11.4.tgz
+Source27: http://registry.npmjs.org/babel-traverse/-/babel-traverse-6.12.0.tgz
 Source28: http://registry.npmjs.org/babel-template/-/babel-template-6.9.0.tgz
 Source29: http://registry.npmjs.org/babel-messages/-/babel-messages-6.8.0.tgz
 Source30: http://registry.npmjs.org/babel-helper-define-map/-/babel-helper-define-map-6.9.0.tgz
@@ -135,7 +135,7 @@ Provides: bundled-npm(babel-helper-replace-supers) = 6.8.0
 Provides: bundled-npm(babel-types) = 6.11.1
 Provides: bundled-npm(babel-plugin-transform-regenerator) = 6.11.4
 Provides: bundled-npm(babel-helper-optimise-call-expression) = 6.8.0
-Provides: bundled-npm(babel-traverse) = 6.11.4
+Provides: bundled-npm(babel-traverse) = 6.12.0
 Provides: bundled-npm(babel-template) = 6.9.0
 Provides: bundled-npm(babel-messages) = 6.8.0
 Provides: bundled-npm(babel-helper-define-map) = 6.9.0
