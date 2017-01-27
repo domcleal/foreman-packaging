@@ -12,6 +12,8 @@ build:
 	# Build the gem cache
 	#
 	/bin/rm -f bundler.d/therubyracer.rb
+	# phantomjs-prebuilt is a test dep only, fails to install on non-x86 arches
+	/bin/sed -i '/phantomjs-prebuilt/d' package.json
 	/bin/cp config/settings.yaml.example config/settings.yaml
 	/bin/cp config/database.yml.example config/database.yml
 	/bin/cp config/email.yaml.example config/email.yaml
